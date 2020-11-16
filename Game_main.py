@@ -5,8 +5,8 @@ import math
 
 pygame.init()
 
-screen_size_x = 1000
-screen_size_y = 750
+screen_size_x = 900
+screen_size_y = 700
 FPS = 50
 
 # Colors
@@ -25,18 +25,6 @@ GREY = (128, 128, 128)
 # The main screen
 screen = pygame.display.set_mode((screen_size_x, screen_size_y))
 screen.fill(WHITE)
-
-# Font and text size
-font = pygame.font.Font('freesansbold.ttf', 32)
-
-def button(font, text, x, y, text_color, rect_color):
-    """
-    The function adds a field with text
-    """
-    textrun = font.render(text, True, text_color, rect_color)
-    textRect = textrun.get_rect()
-    textRect.center = (x, y)
-    screen.blit(textrun, textRect)
 
 clock = pygame.time.Clock()
 finished = False
