@@ -1,41 +1,53 @@
-from random import randrange as rnd, choice
 import pygame
-from pygame.draw import *
-import math
+from game_stats import *
+from game_mechanics import *
 
 pygame.init()
 
-screen_size_x = 900
-screen_size_y = 700
-FPS = 50
-
-# Colors
-RED = (255, 0, 0)
-BLUE = (0, 0, 255)
-YELLOW = (255, 255, 0)
-GREEN = (0, 255, 0)
-MAGENTA = (255, 0, 255)
-CYAN = (0, 255, 255)
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-LIL = (190, 0, 255)
-DARK_GREEN = (0, 128, 0)
-GREY = (128, 128, 128)
+screen_size_x = 1000
+screen_size_y = 600
+FPS = 15
 
 # The main screen
 screen = pygame.display.set_mode((screen_size_x, screen_size_y))
 screen.fill(WHITE)
 
-clock = pygame.time.Clock()
-finished = False
-finished_game = False
+explanatories = []
+for i in range(3):
+    explanatories.append(Explanatory(i+1))
 
-while not finished:
+mood_scale = Mood_scale()
+
+boost_scale = Boost_scale()
+
+timer = Timer()
+
+edit_events = Editor(250, 6)
+
+clock = pygame.time.Clock()
+done = False
+finished_game = False
+# pygame.mixer.music.load('Ramones_Rock_N_Roll_High_School_1.ogg')
+# pygame.mixer.music.play()
+
+while not done:
     clock.tick(FPS)
     pygame.display.update()
     screen.fill(WHITE)
+    done = edit_events.process(pygame.event.get())
+    if edit_events.hero_boosting():
+        boost_scale.boost_points = 100
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            finished = True
+            done = True
+            finished_game = True
+    mood_scale.draw()
+    boost_scale.draw()
+    timer.draw()
+    if mood_scale.mood_points <= 0:
+        done = True
+
+if done == 2:
+    show_game_over_table(done)
 
 pygame.quit()
