@@ -35,9 +35,8 @@ class Hero():
         self.coord = coord
         self.is_alive = True
         self.was_kicked = False
-        self.length = 100  # Full length of hero from top to the bottom
+        self.length = 30  # Full length of hero from top to the bottom
         self.number_of_road = 2
-        self.gender = 0  # 0 - female; 1 - male
 
     def move(self, add_x):
         '''
@@ -47,9 +46,9 @@ class Hero():
 
     def draw(self):
         '''
-        Draws obstacles. Attention: coords are the coordinates of the left top corner
+        Draws the hero, attention: self.coord works like coordinatese of the senter of the hero
         '''
-        rect(screen, MAGENTA, (self.coord[0], self.coord[1], self.length, self.width))
+        circle(screen, RED, self.coord, self.length // 2)
 
 if __name__ == "__main__":
     print("This module is not for direct call!")
