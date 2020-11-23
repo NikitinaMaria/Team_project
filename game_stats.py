@@ -38,7 +38,8 @@ def draw_text(text, x, y, color, size):
 
 
 class Mood_scale:
-    def __init__(self):
+    def __init__(self, parent):
+        self.parent = parent
         self.mood_points = 1000
         self.mood_color = GREEN
         self.mood_750 = pygame.image.load('750.png')
@@ -68,7 +69,8 @@ class Mood_scale:
 
 
 class Boost_scale:
-    def __init__(self):
+    def __init__(self, parent):
+        self.parent = parent
         self.boost_points = 0
         self.boost_color = LIL
 
@@ -81,7 +83,8 @@ class Boost_scale:
 
 
 class Timer:
-    def __init__(self):
+    def __init__(self, parent):
+        self.parent = parent
         self.time = 1000
         self.alarm = pygame.image.load('alarm.png')
         self.alarm_r = pygame.image.load('alarm_r.png')
@@ -108,7 +111,20 @@ class Explanatory:
         screen.blit(self.scale, (screen_size_x - self.place, 130))
 
 class Draw_stats():
-    pass
+    def __init__(self):
+        self.mood_scale = Mood_scale(self)
+        self.boost_scale = Boost_scale(self)
+        self.timer = Timer(self)
+
+    def draw(self):
+        self.mood_scale.draw()
+        self.boost_scale.draw()
+        self.timer.draw()
+        if self.mood_scale.mood_points <= 0:
+            done = True
+        else:
+            done = False
+        return done
 
 if __name__ == "__main__":
     print("This module is not for direct call!")
