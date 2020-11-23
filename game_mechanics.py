@@ -4,8 +4,6 @@ import pygame
 from pygame.draw import *
 from game_hero import *
 
-from Game.game_hero import Hero
-
 pygame.init()
 
 screen_size_x = 1000
@@ -209,6 +207,7 @@ class Editor():
         for boost in self.boosts:
             if self.hero.coord[1] - self.hero.length <= boost.coord[1] + boost.width:
                 if self.hero.number_of_road == boost.number_of_road:
+		    boost.is_alive = False
                     return True
 
     def process(self, events):
