@@ -118,9 +118,6 @@ class Obstacle():
             self.coord[0] = - self.coord[1] * self.lower_distance_from_center_x // screen_size_y + screen_size_x // 2 - self.lower_distance_from_center_x
         else:
             self.coord[0] = self.coord[1] * self.lower_distance_from_center_x // screen_size_y + screen_size_x // 2 + self.lower_distance_from_center_x
-        print(self.coord[0])
-        print(self.coord[1])
-        print(self.lower_distance_from_center_x)
 
 
     def draw(self):
