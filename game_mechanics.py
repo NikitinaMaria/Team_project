@@ -102,9 +102,9 @@ class Obstacle():
         if number_of_road == 2:
             self.lower_distance_from_center_x = self.width_of_road // 4
         elif number_of_road == 3:
-            self.lower_distance_from_center_x = self.width_of_road // 4 + self.distance_between_roads // 2
+            self.lower_distance_from_center_x = self.width_of_road // 4 + self.distance_between_roads
         else:
-            self.lower_distance_from_center_x = self.width_of_road // 4 * 3 + self.distance_between_roads // 2
+            self.lower_distance_from_center_x = self.width_of_road // 4 * 3 + self.distance_between_roads
 
     def motion(self):
         '''
@@ -132,13 +132,24 @@ class Boost():
         self.is_alive = True
         self.speed = speed
         self.width_of_road = (screen_size[0] - 2 * (width_of_pictures + distance_between_roads)) // 3
+        self.width_of_all_road = screen_size_x - 2 * width_of_pictures
         self.width_of_pictures = width_of_pictures
         self.distance_between_roads = distance_between_roads
-        self.coord = [width_of_pictures + (number_of_road - 1) * (self.width_of_road + self.distance_between_roads), 0]
-        self.width = width
+        self.width_start = width // 2
+        self.width = self.width_start
+        self.length = 70
         self.number_of_road = number_of_road
+        self.coord = [width_of_pictures + self.width_of_all_road // 4 + self.width_of_road // 4 - self.length // 4 +
+                      (number_of_road - 1) * (self.width_of_road // 2 + self.distance_between_roads // 2), 0]
         self.redbull = pygame.image.load('RedBull.png')
-        self.scale = pygame.transform.scale(self.redbull, (70, self.width))
+        self.scale = pygame.transform.scale(self.redbull, (self.length // 2, self.width))
+        if number_of_road == 2:
+            self.lower_distance_from_center_x = self.length // 4
+        elif number_of_road == 1:
+            self.lower_distance_from_center_x = self.width_of_road // 2 + self.length // 4 + self.distance_between_roads // 2
+        else:
+            self.lower_distance_from_center_x = self.width_of_road // 2 - self.length // 4 + self.distance_between_roads // 2
+
 
     def motion(self):
         '''
@@ -147,12 +158,20 @@ class Boost():
         self.coord[1] += self.speed
         if self.coord[1] >= screen_size[1] + self.width:
             self.is_alive = False
+        self.length = 35 * (screen_size_y + self.coord[1]) // screen_size_y
+        self.width = self.width_start * (screen_size_y + self.coord[1]) // screen_size_y
+        if self.number_of_road != 3:
+            self.coord[0] = - self.coord[1] * self.lower_distance_from_center_x // screen_size_y + screen_size_x // 2 - self.lower_distance_from_center_x
+        else:
+            self.coord[0] = self.coord[1] * self.lower_distance_from_center_x // screen_size_y + screen_size_x // 2 + self.lower_distance_from_center_x
+
 
     def draw(self):
         '''
         Draws obstacles. Attention: coords are the coordinates of the left top corner
         '''
-        screen.blit(self.scale, (self.coord[0] + self.width_of_road // 2 - self.width // 2, self.coord[1]))
+        self.scale = pygame.transform.scale(self.redbull, (self.length, self.width))
+        screen.blit(self.scale, (self.coord[0], self.coord[1]))
 
 
 class Editor():
@@ -276,7 +295,7 @@ class Editor():
                 self.done = 1
             if self.check_bumping():
                 self.done = 2
-            if self.time % 50 == 0:
+            if self.time % 200 == 0:
                 self.test_is_on = True
                 self.Test = Ivanov_test()
         else:
