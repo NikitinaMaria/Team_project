@@ -181,7 +181,7 @@ class Editor():
         '''
         self.done = 0
         self.step = (screen_size[0] - 2 * width_of_pictures - distance_between_roads * 2) // 3 + distance_between_roads
-        self.hero = Hero(coord=[screen_size[0] // 2, screen_size[1] - 20])
+        self.hero = Hero(coord=[screen_size[0] // 2, screen_size[1] - 20], gender = 1)
         self.time = 0
         self.width_of_pictures = width_of_pictures
         self.distance_between_roads = distance_between_roads
@@ -205,7 +205,7 @@ class Editor():
 
     def move_hero(self, event):
         '''
-		Let hero run to the nearby road, but doesn't give him permission to go out of roads' borders 
+		Let hero run to the nearby road, but doesn't give him permission to go out of roads' borders
 		'''
         if (event.key == pygame.K_d or event.key == pygame.K_RIGHT) and (self.hero.number_of_road <= 2):
             self.hero.move(self.step)
@@ -216,7 +216,7 @@ class Editor():
 
     def move_obstacle(self):
         '''
-		Increase y coordinate of obstacles, user see, how they are falling 
+		Increase y coordinate of obstacles, user see, how they are falling
 		'''
         dead_obstacles = []
         for j, obstacle in enumerate(self.obstacles):
@@ -257,7 +257,7 @@ class Editor():
 		Looks if it's time for the hero to die under the obstacle
 		'''
         for obstacle in self.obstacles:
-            if self.hero.coord[1] - self.hero.length <= obstacle.coord[1] + obstacle.width:
+            if self.hero.coord[1] - 45 <= obstacle.coord[1] + obstacle.width:
                 if self.hero.number_of_road == obstacle.number_of_road:
                     self.hero.was_kicked = True
                     return True
@@ -268,10 +268,11 @@ class Editor():
         :return:
         """
         for boost in self.boosts:
-            if self.hero.coord[1] - self.hero.length <= boost.coord[1] + boost.width:
+            if self.hero.coord[1] - 45 // 4 <= boost.coord[1] + boost.width:
                 if self.hero.number_of_road == boost.number_of_road:
                     boost.is_alive = False
                     return True
+
 
     def process(self, events):
         '''
@@ -288,14 +289,14 @@ class Editor():
             self.user_events(events)
             self.draw()
             self.move_obstacle()
-            self.move_boosts()   
+            self.move_boosts()
             if self.hero_boosting():
                 self.boost_scale.boost_points = 100
             if self.mood_scale.mood_points <= 0:
                 self.done = 1
             if self.check_bumping():
                 self.done = 2
-            if self.time % 200 == 0:
+            if self.time % 100 == 0:
                 self.test_is_on = True
                 self.Test = Ivanov_test()
         else:
@@ -323,7 +324,7 @@ class Ivanov_test():
         self.number_of_task = 1
         self.answer_list = []
         self.score = 0
-        
+
     def progress(self, events):
         '''
         Manager function for all proccesses in test
@@ -365,14 +366,14 @@ class Ivanov_test():
             elif self.number == 3:
                 self.draw_equivalent()
             else:
-                self.draw_epsilon() 
-            insert_picture('Hint.png', (4 * screen_size[0] // 5, screen_size[1] // 3), (screen_size[0] // 3, screen_size[1] // 4))   
+                self.draw_epsilon()
+            insert_picture('Hint.png', (4 * screen_size[0] // 5, screen_size[1] // 3), (screen_size[0] // 3, screen_size[1] // 4))
             for i in range(4):
                 insert_text(str(i + 1) + ') ', "Game-font.ttf", BLACK, (screen_size[0] // 12, i * self.length_of_answer_pic + screen_size[1] // 5), 20)
         elif self.number_of_task >= 5:
             self.time = max(self.time, self.time_limit - (self.growing_time * 2))
             if self.score == 0:
-                insert_picture('Falure.jpg', (screen_size[0] // 2, screen_size[1] // 2), (screen_size[0], screen_size[1])) 
+                insert_picture('Falure.jpg', (screen_size[0] // 2, screen_size[1] // 2), (screen_size[0], screen_size[1]))
                 insert_text('You need to work harder', 'Game-font.ttf', WHITE, (screen_size[0] // 2, 3 * screen_size[1] // 4), min(screen_size[0] // 9, screen_size[1] // 9))
             for i in range(4):
                 insert_text(str(i + 1) + ') ', "Game-font.ttf", BLACK, (screen_size[0] // 12, i * self.length_of_answer_pic + screen_size[1] // 5), 20)
@@ -387,17 +388,17 @@ class Ivanov_test():
         '''
         for i in range(self.number_of_task - 1):
             if self.answer_list[i] == True:
-                insert_picture('right_ans.png', (screen_size[0] // 12 +  self.length_of_answer_pic, i * self.length_of_answer_pic + screen_size[1] // 5), 
+                insert_picture('right_ans.png', (screen_size[0] // 12 +  self.length_of_answer_pic, i * self.length_of_answer_pic + screen_size[1] // 5),
                               (self.length_of_answer_pic, self.length_of_answer_pic))
             else:
-                insert_picture('wrong.jpg', (screen_size[0] // 12 +  self.length_of_answer_pic, i * self.length_of_answer_pic + screen_size[1] // 5), 
+                insert_picture('wrong.jpg', (screen_size[0] // 12 +  self.length_of_answer_pic, i * self.length_of_answer_pic + screen_size[1] // 5),
                               (self.length_of_answer_pic, self.length_of_answer_pic))
-        
+
     def user_events(self, events):
         '''
         Analize events from keyboard, mouse, etc.
         '''
-        for event in events: 
+        for event in events:
             self.done = quit_condition(event.type)
             if (self.time >= self.growing_time) and (event.type == pygame.KEYUP):
                 if (event.key == pygame.K_d or event.key == pygame.K_RIGHT) and (self.number == 4):
@@ -417,7 +418,7 @@ class Ivanov_test():
                     self.answer_list.append(True)
                     self.number_of_task += 1
                     self.score += 1
-    
+
     def draw_for_all(self):
         line(screen, BLACK, (self.x - self.length // 2, self.y - self.length // 2), (self.x , self.y + self.length // 2), 5)
         line(screen, BLACK, (self.x , self.y + self.length // 2), (self.x + self.length // 2, self.y - self.length // 2), 5)
@@ -425,7 +426,7 @@ class Ivanov_test():
 
     def draw_exist(self):
         for i in range(3):
-            line(screen, BLACK, (self.x - self.length // 4, self.y - self.length // 2 + (self.length // 2) * i), 
+            line(screen, BLACK, (self.x - self.length // 4, self.y - self.length // 2 + (self.length // 2) * i),
                 (self.x + self.length // 2, self.y - self.length // 2 + (self.length // 2) * i), 5 )
         line(screen, BLACK, (self.x + self.length // 2, self.y - self.length // 2), (self.x + self.length // 2, self.y + self.length // 2), 5)
 
@@ -435,7 +436,7 @@ class Ivanov_test():
         for i in range(-1, 3, 2):
             line(screen, BLACK, (self.x - i * self.length // 2, self.y), (self.x - i * self.length // 13, self.y - self.length // 4 + 4 ), 5)
             line(screen, BLACK, (self.x - i * self.length // 2, self.y), (self.x - i * self.length // 13, self.y + self.length // 4 - 4 ), 5)
-    
+
     def draw_epsilon(self):
         insert_picture('epsilon.jpg', (self.x, self.y), (self.length, self.length))
 

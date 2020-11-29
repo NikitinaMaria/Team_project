@@ -38,7 +38,7 @@ class Hero():
         self.gender = gender
         self.step = 1
         self.direction = 1
-
+        self.length = 45
         if coord is None:
             coord = [screen_size[0] // 2, 0]
         self.coord = coord
