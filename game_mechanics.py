@@ -149,9 +149,9 @@ class Editor():
         self.obstacles = []
         self.boosts = []
         self.test_is_on = False
-        self.timer = Timer(self)
-        self.mood_scale = Mood_scale(self)
-        self.boost_scale = Boost_scale(self)
+        self.timer = Timer()
+        self.mood_scale = Mood_scale()
+        self.boost_scale = Boost_scale()
 
     def user_events(self, events):
         '''
@@ -305,8 +305,8 @@ class Ivanov_test():
         4 - epsilon
         '''
         self.task = []
-        #for i in range(5):
-        self.task.append(randint(1, 4))
+        for i in range(5):
+            self.task.append(randint(1, 4))
 
     def draw(self):
         '''
@@ -336,9 +336,7 @@ class Ivanov_test():
                 insert_picture('Falure.jpg', (screen_size[0] // 2, screen_size[1] // 2), (screen_size[0], screen_size[1])) 
                 insert_text('You need to work harder', 'Game-font.ttf', WHITE, (screen_size[0] // 2, 3 * screen_size[1] // 4), min(screen_size[0] // 9, screen_size[1] // 9))
             for i in range(4):
-                insert_text(str(i + 1) + ') ', "Game-font.ttf", BLACK, (screen_size[0] // 12, i * self.length_of_answer_pic + screen_size[1] // 5), 20)
-            if self.score > 0:
-                insert_text('Congrats! Your score: ' + str(self.score), "Game-font.ttf", RED, (screen_size_x // 2, screen_size_y // 2), 50)
+                insert_text(str(i + 1) + ') ', "Game-font.ttf", WHITE, (screen_size[0] // 12, i * self.length_of_answer_pic + screen_size[1] // 5), 20)
         self.draw_right_or_wrong_answer()
         pygame.display.update()
 
@@ -360,7 +358,7 @@ class Ivanov_test():
         '''
         for event in events: 
             self.done = quit_condition(event.type)
-            if (self.time >= self.growing_time) and (event.type == pygame.KEYUP):
+            if (self.time >= self.growing_time) and (event.type == pygame.KEYUP) :
                 if (event.key == pygame.K_d or event.key == pygame.K_RIGHT) and (self.number == 4):
                     self.task.pop(len(self.task) - 1)
                 elif (event.key == pygame.K_a or event.key == pygame.K_LEFT) and (self.number == 3):
