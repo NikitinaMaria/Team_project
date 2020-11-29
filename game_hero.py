@@ -25,18 +25,28 @@ LIL = (190, 0, 255)
 DARK_GREEN = (0, 128, 0)
 GREY = (128, 128, 128)
 
+male_model = pygame.image.load("male.png")
+female_model = pygame.image.load("female.png")
+
 class Hero():
-    def __init__(self, coord=None):
+    def __init__(self, coord=None, gender = 1):
         '''
         Set ball's parameters and thier meanings
+    def __init__(self, x, y, scale, gender, step, direction, vel, stand):
         '''
+        self.scale = 0.5
+        self.gender = gender
+        self.step = 1
+        self.direction = 1
+
         if coord is None:
             coord = [screen_size[0] // 2, 0]
         self.coord = coord
         self.is_alive = True
         self.was_kicked = False
-        self.length = 30  # Full length of hero from top to the bottom
         self.number_of_road = 2
+        self.size_x = 300
+        self.size_y = 400
 
     def move(self, add_x):
         '''
@@ -48,7 +58,19 @@ class Hero():
         '''
         Draws the hero, attention: self.coord works like coordinatese of the senter of the hero
         '''
-        circle(screen, RED, self.coord, self.length // 2)
+
+        if self.gender == 1:
+            player_surface = pygame.transform.scale(male_model, (self.size_x, self.size_y))
+        elif self.gender == 0:
+            player_surface = pygame.transform.scale(female_model, (self.size_x, self.size_y))
+
+        screen.blit(player_surface, (self.coord[0] - 38, -75 + self.coord[1]), ((self.size_x / 4)*(int(self.step) - 1), 5 + (self.size_y / 4)*self.direction, self.size_x / 4, self.size_y / 4))
+
+        if self.step > 4.9:
+            self.step = 1
+        else:
+            self.step += 0.1
+
 
 if __name__ == "__main__":
     print("This module is not for direct call!")
