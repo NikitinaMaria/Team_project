@@ -58,14 +58,21 @@ def quit_condition(pressed_button):
 
 
 def draw_road(width_of_pictures, distance_between_roads):
-    '''
-	Function draws three main roads according of the size of the left and rigth pictures and distance between roads
-	'''
-    width_of_road = (screen_size[0] - 2 * width_of_pictures - distance_between_roads * 2) // 3
-    rect(screen, BLACK, (width_of_pictures, 0, screen_size[0] - 2 * width_of_pictures - 2, screen_size[1]))
-    for i in range(3):
-        rect(screen, GREY,
-             (width_of_pictures + i * (width_of_road + distance_between_roads), 0, width_of_road, screen_size[1]))
+    """"
+    The function draws road
+    """
+    width_of_road = screen_size_x - 2 * width_of_pictures
+    polygon(screen, GREY, ((width_of_pictures, screen_size_y),
+                           (screen_size_x - width_of_pictures, screen_size_y),
+                           ((screen_size_x - width_of_road // 2) // 2 + width_of_road // 2, 0),
+                           ((screen_size_x - width_of_road // 2) // 2, 0)))
+
+    line(screen, WHITE, (width_of_pictures + (width_of_road - 2 * distance_between_roads) // 3, screen_size_y),
+         ((screen_size_x - width_of_road // 2) // 2 + (width_of_road // 2 - distance_between_roads) // 3, 0),
+         distance_between_roads)
+    line(screen, WHITE, (width_of_pictures + 2 * width_of_road // 3 + distance_between_roads, screen_size_y),
+         (screen_size_x // 2 + (width_of_road - 2 * distance_between_roads) // 12, 0),
+         distance_between_roads)
 
 
 def show_game_over_table(done):
@@ -85,12 +92,19 @@ class Obstacle():
         self.is_alive = True
         self.speed = speed
         self.width_of_road = (screen_size[0] - 2 * (width_of_pictures + distance_between_roads)) // 3
+        self.width_of_all_road = screen_size_x - 2 * width_of_pictures
         self.width_of_pictures = width_of_pictures
         self.distance_between_roads = distance_between_roads
-        self.coord = [width_of_pictures + (number_of_road - 1) * (self.width_of_road + self.distance_between_roads), 0]
-        self.length = self.width_of_road
+        self.coord = [width_of_pictures + self.width_of_all_road // 4 + (number_of_road - 1) * (self.width_of_road // 2 + self.distance_between_roads // 2), 0]
+        self.length = self.width_of_road // 2
         self.width = width
         self.number_of_road = number_of_road
+        if number_of_road == 2:
+            self.lower_distance_from_center_x = self.width_of_road // 4
+        elif number_of_road == 3:
+            self.lower_distance_from_center_x = self.width_of_road // 4 + self.distance_between_roads // 2
+        else:
+            self.lower_distance_from_center_x = self.width_of_road // 4 * 3 + self.distance_between_roads // 2
 
     def motion(self):
         '''
@@ -99,6 +113,15 @@ class Obstacle():
         self.coord[1] += self.speed
         if self.coord[1] >= screen_size[1] - self.width:
             self.is_alive = False
+        self.length = self.width_of_road // 2 * (screen_size_y + self.coord[1]) // screen_size_y
+        if self.number_of_road != 3:
+            self.coord[0] = - self.coord[1] * self.lower_distance_from_center_x // screen_size_y + screen_size_x // 2 - self.lower_distance_from_center_x
+        else:
+            self.coord[0] = self.coord[1] * self.lower_distance_from_center_x // screen_size_y + screen_size_x // 2 + self.lower_distance_from_center_x
+        print(self.coord[0])
+        print(self.coord[1])
+        print(self.lower_distance_from_center_x)
+
 
     def draw(self):
         '''
@@ -149,9 +172,9 @@ class Editor():
         self.obstacles = []
         self.boosts = []
         self.test_is_on = False
-        self.timer = Timer()
-        self.mood_scale = Mood_scale()
-        self.boost_scale = Boost_scale()
+        self.timer = Timer(self)
+        self.mood_scale = Mood_scale(self)
+        self.boost_scale = Boost_scale(self)
 
     def user_events(self, events):
         '''
@@ -336,7 +359,9 @@ class Ivanov_test():
                 insert_picture('Falure.jpg', (screen_size[0] // 2, screen_size[1] // 2), (screen_size[0], screen_size[1])) 
                 insert_text('You need to work harder', 'Game-font.ttf', WHITE, (screen_size[0] // 2, 3 * screen_size[1] // 4), min(screen_size[0] // 9, screen_size[1] // 9))
             for i in range(4):
-                insert_text(str(i + 1) + ') ', "Game-font.ttf", WHITE, (screen_size[0] // 12, i * self.length_of_answer_pic + screen_size[1] // 5), 20)
+                insert_text(str(i + 1) + ') ', "Game-font.ttf", BLACK, (screen_size[0] // 12, i * self.length_of_answer_pic + screen_size[1] // 5), 20)
+            if self.score > 0:
+                insert_text('Congrats! Your score: ' + str(self.score), "Game-font.ttf", RED, (screen_size_x // 2, screen_size_y // 2), 50)
         self.draw_right_or_wrong_answer()
         pygame.display.update()
 
@@ -358,7 +383,7 @@ class Ivanov_test():
         '''
         for event in events: 
             self.done = quit_condition(event.type)
-            if (self.time >= self.growing_time) and (event.type == pygame.KEYUP) :
+            if (self.time >= self.growing_time) and (event.type == pygame.KEYUP):
                 if (event.key == pygame.K_d or event.key == pygame.K_RIGHT) and (self.number == 4):
                     self.task.pop(len(self.task) - 1)
                 elif (event.key == pygame.K_a or event.key == pygame.K_LEFT) and (self.number == 3):
