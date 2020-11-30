@@ -42,10 +42,10 @@ class Mood_scale:
         self.parent = parent
         self.mood_points = 1000
         self.mood_color = GREEN
-        self.mood_750 = pygame.image.load('750.png')
-        self.mood_500 = pygame.image.load('500.png')
-        self.mood_250 = pygame.image.load('250.png')
-        self.mood_0 = pygame.image.load('0.png')
+        self.mood_750 = pygame.image.load('images/750.png')
+        self.mood_500 = pygame.image.load('images/500.png')
+        self.mood_250 = pygame.image.load('images/250.png')
+        self.mood_0 = pygame.image.load('images/0.png')
         self.scale = pygame.transform.scale(self.mood_750, (50, 50))
 
     def draw(self):
@@ -86,9 +86,9 @@ class Timer:
     def __init__(self, parent):
         self.parent = parent
         self.time = 1000
-        self.alarm = pygame.image.load('alarm.png')
-        self.alarm_r = pygame.image.load('alarm_r.png')
-        self.alarm_l = pygame.image.load('alarm_l.png')
+        self.alarm = pygame.image.load('images/alarm.png')
+        self.alarm_r = pygame.image.load('images/alarm_r.png')
+        self.alarm_l = pygame.image.load('images/alarm_l.png')
 
     def draw(self):
         if self.time >= 500:
@@ -104,7 +104,7 @@ class Timer:
 class Explanatory:
     def __init__(self, place):
         self.place = place * 70
-        self.scroll = pygame.image.load('scroll.png')
+        self.scroll = pygame.image.load('images/scroll.png')
         self.scale = pygame.transform.scale(self.scroll, (70, 70))
 
     def draw(self):

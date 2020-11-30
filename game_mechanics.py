@@ -6,7 +6,7 @@ from pygame.draw import *
 from game_hero import *
 from game_stats import *
 
-#from Game.game_hero import Hero
+# from Game.game_hero import Hero
 
 pygame.init()
 
@@ -29,14 +29,16 @@ LIL = (190, 0, 255)
 DARK_GREEN = (0, 128, 0)
 GREY = (128, 128, 128)
 
+
 def insert_picture(name, position, size):
     '''
     Paste image according to its position and size which written like (full_size_x, full_size_y)
     '''
     surf = pygame.image.load(name)
     surf = pygame.transform.scale(surf, size)
-    rect = surf.get_rect(center = position)
+    rect = surf.get_rect(center=position)
     screen.blit(surf, rect)
+
 
 def insert_text(string, font, color, position, size):
     '''
@@ -44,8 +46,9 @@ def insert_text(string, font, color, position, size):
     '''
     text_style = pygame.font.Font(font, size)
     surface = text_style.render(string, True, color)
-    textRect = surface.get_rect(center = position)
+    textRect = surface.get_rect(center=position)
     screen.blit(surface, textRect)
+
 
 def quit_condition(pressed_button):
     """
@@ -91,11 +94,17 @@ class Obstacle():
     def __init__(self, speed, number_of_road, width, width_of_pictures, distance_between_roads):
         self.is_alive = True
         self.speed = speed
+        self.type = randint(1, 2)
+        if self.type == 1:
+            self.bed = pygame.image.load('images/bed.png')
+        else:
+            self.bed = pygame.image.load('images/sofa.png')
         self.width_of_road = (screen_size[0] - 2 * (width_of_pictures + distance_between_roads)) // 3
         self.width_of_all_road = screen_size_x - 2 * width_of_pictures
         self.width_of_pictures = width_of_pictures
         self.distance_between_roads = distance_between_roads
-        self.coord = [width_of_pictures + self.width_of_all_road // 4 + (number_of_road - 1) * (self.width_of_road // 2 + self.distance_between_roads // 2), 0]
+        self.coord = [width_of_pictures + self.width_of_all_road // 4 + (number_of_road - 1) * (
+                    self.width_of_road // 2 + self.distance_between_roads // 2), 0]
         self.length = self.width_of_road // 2
         self.width = width
         self.number_of_road = number_of_road
@@ -115,16 +124,18 @@ class Obstacle():
             self.is_alive = False
         self.length = self.width_of_road // 2 * (screen_size_y + self.coord[1]) // screen_size_y
         if self.number_of_road != 3:
-            self.coord[0] = - self.coord[1] * self.lower_distance_from_center_x // screen_size_y + screen_size_x // 2 - self.lower_distance_from_center_x
+            self.coord[0] = - self.coord[
+                1] * self.lower_distance_from_center_x // screen_size_y + screen_size_x // 2 - self.lower_distance_from_center_x
         else:
-            self.coord[0] = self.coord[1] * self.lower_distance_from_center_x // screen_size_y + screen_size_x // 2 + self.lower_distance_from_center_x
-
+            self.coord[0] = self.coord[
+                                1] * self.lower_distance_from_center_x // screen_size_y + screen_size_x // 2 + self.lower_distance_from_center_x
 
     def draw(self):
         '''
 		Draws obstacles. Attention: coords are the coordinates of the left top corner
 		'''
-        rect(screen, MAGENTA, (self.coord[0], self.coord[1], self.length, self.width))
+        self.scale = pygame.transform.scale(self.bed, (self.length, self.width))
+        screen.blit(self.scale, (self.coord[0], self.coord[1]))
 
 
 class Boost():
@@ -137,19 +148,18 @@ class Boost():
         self.distance_between_roads = distance_between_roads
         self.width_start = width // 2
         self.width = self.width_start
-        self.length = 70
+        self.length = 35
         self.number_of_road = number_of_road
-        self.coord = [width_of_pictures + self.width_of_all_road // 4 + self.width_of_road // 4 - self.length // 4 +
+        self.coord = [width_of_pictures + self.width_of_all_road // 4 + self.width_of_road // 4 - self.length // 2 +
                       (number_of_road - 1) * (self.width_of_road // 2 + self.distance_between_roads // 2), 0]
-        self.redbull = pygame.image.load('RedBull.png')
-        self.scale = pygame.transform.scale(self.redbull, (self.length // 2, self.width))
+        self.redbull = pygame.image.load('images/RedBull.png')
+        self.scale = pygame.transform.scale(self.redbull, (self.length, self.width))
         if number_of_road == 2:
             self.lower_distance_from_center_x = self.length // 4
         elif number_of_road == 1:
-            self.lower_distance_from_center_x = self.width_of_road // 2 + self.length // 4 + self.distance_between_roads // 2
+            self.lower_distance_from_center_x = self.width_of_road // 2 + self.length // 2 + self.distance_between_roads // 2
         else:
-            self.lower_distance_from_center_x = self.width_of_road // 2 - self.length // 4 + self.distance_between_roads // 2
-
+            self.lower_distance_from_center_x = self.width_of_road // 2 - self.length // 2 + self.distance_between_roads // 2
 
     def motion(self):
         '''
@@ -161,10 +171,11 @@ class Boost():
         self.length = 35 * (screen_size_y + self.coord[1]) // screen_size_y
         self.width = self.width_start * (screen_size_y + self.coord[1]) // screen_size_y
         if self.number_of_road != 3:
-            self.coord[0] = - self.coord[1] * self.lower_distance_from_center_x // screen_size_y + screen_size_x // 2 - self.lower_distance_from_center_x
+            self.coord[0] = - self.coord[
+                1] * self.lower_distance_from_center_x // screen_size_y + screen_size_x // 2 - self.lower_distance_from_center_x
         else:
-            self.coord[0] = self.coord[1] * self.lower_distance_from_center_x // screen_size_y + screen_size_x // 2 + self.lower_distance_from_center_x
-
+            self.coord[0] = self.coord[
+                                1] * self.lower_distance_from_center_x // screen_size_y + screen_size_x // 2 + self.lower_distance_from_center_x
 
     def draw(self):
         '''
@@ -181,7 +192,7 @@ class Editor():
         '''
         self.done = 0
         self.step = (screen_size[0] - 2 * width_of_pictures - distance_between_roads * 2) // 3 + distance_between_roads
-        self.hero = Hero(coord=[screen_size[0] // 2, screen_size[1] - 20], gender = 1)
+        self.hero = Hero(coord=[screen_size[0] // 2, screen_size[1] - 20], gender=1)
         self.time = 0
         self.width_of_pictures = width_of_pictures
         self.distance_between_roads = distance_between_roads
@@ -273,7 +284,6 @@ class Editor():
                     boost.is_alive = False
                     return True
 
-
     def process(self, events):
         '''
 		Manager function for all processes in program. It creates obstacles and control their movement, closes program because of pressed [X] button
@@ -281,10 +291,11 @@ class Editor():
 		'''
         if not self.test_is_on:
             self.time += 1
-            if self.time % 20 == 0:
-                self.obstacles.append(Obstacle(10, randint(1, 3), 10, self.width_of_pictures, self.distance_between_roads))
-            if self.time % 47 == 0:
-                self.boosts.append(Boost(10, randint(1,3), 70, self.width_of_pictures, self.distance_between_roads))
+            if self.time % 40 == 0:
+                self.obstacles.append(
+                    Obstacle(10, randint(1, 3), 50, self.width_of_pictures, self.distance_between_roads))
+            if self.time % 67 == 0:
+                self.boosts.append(Boost(10, randint(1, 3), 70, self.width_of_pictures, self.distance_between_roads))
             self.done = 0
             self.user_events(events)
             self.draw()
@@ -296,7 +307,7 @@ class Editor():
                 self.done = 1
             if self.check_bumping():
                 self.done = 2
-            if self.time % 100 == 0:
+            if self.time % 200 == 0:
                 self.test_is_on = True
                 self.Test = Ivanov_test()
         else:
@@ -305,13 +316,14 @@ class Editor():
             self.test_is_on = return_list[1]
         return self.done
 
+
 class Ivanov_test():
     def __init__(self):
         '''
         Set test's parameters and thier meanings
         '''
         self.time = 0
-        self.length = min(screen_size[0] // 7, screen_size[1] // 7 )
+        self.length = min(screen_size[0] // 7, screen_size[1] // 7)
         self.done = 0
         self.time_is_over = False
         self.time_limit = 15 * FPS
@@ -355,9 +367,12 @@ class Ivanov_test():
         time_scale = screen_size[0] / self.time_limit
         rect(screen, RED, (0, 0, int(self.time * time_scale), 10))
         if self.time <= self.growing_time:
-            insert_text("Dancing time!", "Game-font.ttf", GREEN, (screen_size[0] // 2, screen_size[1] // 2), self.time * self.time)
+            insert_text("Dancing time!", "Game-font.ttf", GREEN, (screen_size[0] // 2, screen_size[1] // 2),
+                        self.time * self.time)
         elif self.number_of_task <= 4:
-            rect(screen, BLACK, (self.x - self.length // 2 - 10, self.y - self.length // 2 - 10, self.length + 20, self.length + 20), 5)
+            rect(screen, BLACK,
+                 (self.x - self.length // 2 - 10, self.y - self.length // 2 - 10, self.length + 20, self.length + 20),
+                 5)
             self.number = self.task[len(self.task) - 1]
             if self.number == 1:
                 self.draw_for_all()
@@ -367,18 +382,25 @@ class Ivanov_test():
                 self.draw_equivalent()
             else:
                 self.draw_epsilon()
-            insert_picture('Hint.png', (4 * screen_size[0] // 5, screen_size[1] // 3), (screen_size[0] // 3, screen_size[1] // 4))
+            insert_picture('images/Hint.png', (4 * screen_size[0] // 5, screen_size[1] // 3),
+                           (screen_size[0] // 3, screen_size[1] // 4))
             for i in range(4):
-                insert_text(str(i + 1) + ') ', "Game-font.ttf", BLACK, (screen_size[0] // 12, i * self.length_of_answer_pic + screen_size[1] // 5), 20)
+                insert_text(str(i + 1) + ') ', "Game-font.ttf", BLACK,
+                            (screen_size[0] // 12, i * self.length_of_answer_pic + screen_size[1] // 5), 20)
         elif self.number_of_task >= 5:
             self.time = max(self.time, self.time_limit - (self.growing_time * 2))
             if self.score == 0:
-                insert_picture('Falure.jpg', (screen_size[0] // 2, screen_size[1] // 2), (screen_size[0], screen_size[1]))
-                insert_text('You need to work harder', 'Game-font.ttf', WHITE, (screen_size[0] // 2, 3 * screen_size[1] // 4), min(screen_size[0] // 9, screen_size[1] // 9))
+                insert_picture('images/Falure.jpg', (screen_size[0] // 2, screen_size[1] // 2),
+                               (screen_size[0], screen_size[1]))
+                insert_text('You need to work harder', 'Game-font.ttf', WHITE,
+                            (screen_size[0] // 2, 3 * screen_size[1] // 4),
+                            min(screen_size[0] // 9, screen_size[1] // 9))
             for i in range(4):
-                insert_text(str(i + 1) + ') ', "Game-font.ttf", BLACK, (screen_size[0] // 12, i * self.length_of_answer_pic + screen_size[1] // 5), 20)
+                insert_text(str(i + 1) + ') ', "Game-font.ttf", BLACK,
+                            (screen_size[0] // 12, i * self.length_of_answer_pic + screen_size[1] // 5), 20)
             if self.score > 0:
-                insert_text('Congrats! Your score: ' + str(self.score), "Game-font.ttf", RED, (screen_size_x // 2, screen_size_y // 2), 50)
+                insert_text('Congrats! Your score: ' + str(self.score), "Game-font.ttf", RED,
+                            (screen_size_x // 2, screen_size_y // 2), 50)
         self.draw_right_or_wrong_answer()
         pygame.display.update()
 
@@ -388,11 +410,13 @@ class Ivanov_test():
         '''
         for i in range(self.number_of_task - 1):
             if self.answer_list[i] == True:
-                insert_picture('right_ans.png', (screen_size[0] // 12 +  self.length_of_answer_pic, i * self.length_of_answer_pic + screen_size[1] // 5),
-                              (self.length_of_answer_pic, self.length_of_answer_pic))
+                insert_picture('images/right_ans.png', (
+                screen_size[0] // 12 + self.length_of_answer_pic, i * self.length_of_answer_pic + screen_size[1] // 5),
+                               (self.length_of_answer_pic, self.length_of_answer_pic))
             else:
-                insert_picture('wrong.jpg', (screen_size[0] // 12 +  self.length_of_answer_pic, i * self.length_of_answer_pic + screen_size[1] // 5),
-                              (self.length_of_answer_pic, self.length_of_answer_pic))
+                insert_picture('images/wrong.jpg', (
+                screen_size[0] // 12 + self.length_of_answer_pic, i * self.length_of_answer_pic + screen_size[1] // 5),
+                               (self.length_of_answer_pic, self.length_of_answer_pic))
 
     def user_events(self, events):
         '''
@@ -420,25 +444,33 @@ class Ivanov_test():
                     self.score += 1
 
     def draw_for_all(self):
-        line(screen, BLACK, (self.x - self.length // 2, self.y - self.length // 2), (self.x , self.y + self.length // 2), 5)
-        line(screen, BLACK, (self.x , self.y + self.length // 2), (self.x + self.length // 2, self.y - self.length // 2), 5)
-        line(screen, BLACK, (self.x - self.length // 4, self.y ), (self.x + self.length // 4, self.y ), 5)
+        line(screen, BLACK, (self.x - self.length // 2, self.y - self.length // 2), (self.x, self.y + self.length // 2),
+             5)
+        line(screen, BLACK, (self.x, self.y + self.length // 2), (self.x + self.length // 2, self.y - self.length // 2),
+             5)
+        line(screen, BLACK, (self.x - self.length // 4, self.y), (self.x + self.length // 4, self.y), 5)
 
     def draw_exist(self):
         for i in range(3):
             line(screen, BLACK, (self.x - self.length // 4, self.y - self.length // 2 + (self.length // 2) * i),
-                (self.x + self.length // 2, self.y - self.length // 2 + (self.length // 2) * i), 5 )
-        line(screen, BLACK, (self.x + self.length // 2, self.y - self.length // 2), (self.x + self.length // 2, self.y + self.length // 2), 5)
+                 (self.x + self.length // 2, self.y - self.length // 2 + (self.length // 2) * i), 5)
+        line(screen, BLACK, (self.x + self.length // 2, self.y - self.length // 2),
+             (self.x + self.length // 2, self.y + self.length // 2), 5)
 
     def draw_equivalent(self):
-        line(screen, BLACK, (self.x - self.length // 4, self.y - self.length // 8), (self.x + self.length // 4, self.y - self.length // 8), 5)
-        line(screen, BLACK, (self.x - self.length // 4, self.y + self.length // 8), (self.x + self.length // 4, self.y + self.length // 8), 5)
+        line(screen, BLACK, (self.x - self.length // 4, self.y - self.length // 8),
+             (self.x + self.length // 4, self.y - self.length // 8), 5)
+        line(screen, BLACK, (self.x - self.length // 4, self.y + self.length // 8),
+             (self.x + self.length // 4, self.y + self.length // 8), 5)
         for i in range(-1, 3, 2):
-            line(screen, BLACK, (self.x - i * self.length // 2, self.y), (self.x - i * self.length // 13, self.y - self.length // 4 + 4 ), 5)
-            line(screen, BLACK, (self.x - i * self.length // 2, self.y), (self.x - i * self.length // 13, self.y + self.length // 4 - 4 ), 5)
+            line(screen, BLACK, (self.x - i * self.length // 2, self.y),
+                 (self.x - i * self.length // 13, self.y - self.length // 4 + 4), 5)
+            line(screen, BLACK, (self.x - i * self.length // 2, self.y),
+                 (self.x - i * self.length // 13, self.y + self.length // 4 - 4), 5)
 
     def draw_epsilon(self):
-        insert_picture('epsilon.jpg', (self.x, self.y), (self.length, self.length))
+        insert_picture('images/epsilon.jpg', (self.x, self.y), (self.length, self.length))
+
 
 if __name__ == "__main__":
     print("This module is not for direct call!")
