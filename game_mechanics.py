@@ -28,6 +28,8 @@ WHITE = (255, 255, 255)
 LIL = (190, 0, 255)
 DARK_GREEN = (0, 128, 0)
 GREY = (128, 128, 128)
+BLACKBOARD = (65, 86, 71)
+BLACKBOARD_3 = (81, 78, 36)
 
 
 def insert_picture(name, position, size):
@@ -90,7 +92,7 @@ def show_game_over_table(done):
             done = quit_condition(event.type)
 
 
-class Obstacle():
+class Obstacle:
     def __init__(self, speed, number_of_road, width, width_of_pictures, distance_between_roads):
         self.is_alive = True
         self.speed = speed
@@ -138,7 +140,7 @@ class Obstacle():
         screen.blit(self.scale, (self.coord[0], self.coord[1]))
 
 
-class Boost():
+class Boost:
     def __init__(self, speed, number_of_road, width, width_of_pictures, distance_between_roads):
         self.is_alive = True
         self.speed = speed
@@ -185,11 +187,145 @@ class Boost():
         screen.blit(self.scale, (self.coord[0], self.coord[1]))
 
 
+class Stream:
+    def __init__(self):
+        self.side = randint(1, 2)
+        if self.side == 1:
+            self.coord_x = randint(0, 150)
+        else:
+            self.coord_x = randint(screen_size_x - 250, screen_size_x - 130)
+        self.coord_y = randint(150, 400)
+        self.click_time = 200
+        self.width = 120
+        self.length = 130
+        self.youtube = pygame.image.load('images/youtube.png')
+        self.background = pygame.image.load('images/background.jpg')
+        self.background_3 = pygame.image.load('images/background_3.png')
+        self.background_4 = pygame.image.load('images/background_4.png')
+        self.scale = pygame.transform.scale(self.youtube, (self.length, self.width))
+        self.stream_is_available = True
+        self.stream_is_on = False
+        self.done = 0
+        self.step = 1
+
+    def draw_button(self):
+        if self.stream_is_available:
+            self.click_time -= 1
+            self.scale = pygame.transform.scale(self.youtube, (self.length, self.width))
+            screen.blit(self.scale, (self.coord_x, self.coord_y))
+            if self.click_time <= 0:
+                self.stream_is_available = False
+
+    def button_check(self, events):
+        for event in events:
+            if self.stream_is_available and (event.type == pygame.MOUSEBUTTONDOWN):
+                mouse_x, mouse_y = event.pos
+                if (mouse_x > self.coord_x) and (mouse_x < self.coord_x + self.length) and (mouse_y > self.coord_y) and \
+                        (mouse_y < self.coord_y + self.width):
+                    self.click_time = 0
+                    self.stream_is_on = True
+
+    def draw(self):
+        if self.step == 1:
+            self.scale = pygame.transform.scale(self.background, (screen_size_x, screen_size_y))
+            screen.blit(self.scale, (0, 0))
+            rect(screen, BLACKBOARD, (screen_size_x // 6, screen_size_y // 12, 10 * screen_size_x // 27, 4 * screen_size_y // 5 + 10))
+            draw_text('Хотите задать вопрос?', screen_size_x // 3 + 25, screen_size_y // 5, WHITE, 28)
+            rect(screen, WHITE, (screen_size_x // 6 + 10, 4 * screen_size_y // 9, 10 * screen_size_x // 27 - 20, 70), 3)
+            draw_text('Хочу!', screen_size_x // 3 + 25, 4 * screen_size_y // 9 + 35, WHITE, 28)
+            rect(screen, WHITE, (screen_size_x // 6 + 10, 6 * screen_size_y // 9, 10 * screen_size_x // 27 - 20, 70), 3)
+            draw_text('Пожалуй, нет...', screen_size_x // 3 + 25, 6 * screen_size_y // 9 + 35, WHITE, 28)
+
+        if self.step == 2:
+            self.scale = pygame.transform.scale(self.background, (screen_size_x, screen_size_y))
+            screen.blit(self.scale, (0, 0))
+            rect(screen, BLACKBOARD,
+                 (screen_size_x // 6, screen_size_y // 12, 10 * screen_size_x // 27, 4 * screen_size_y // 5 + 10))
+            draw_text('Хорошо.', screen_size_x // 3 + 25, screen_size_y // 7, WHITE, 28)
+            draw_text('Давайте ваш вопрос.', screen_size_x // 3 + 25, screen_size_y // 7 + 30, WHITE, 28)
+            for i in range(6):
+                rect(screen, WHITE,
+                     (screen_size_x // 6 + 10, (i+2) * screen_size_y // 9, 10 * screen_size_x // 27 - 20, 70), 3)
+            draw_text('Механика', screen_size_x // 3 + 25, 2 * screen_size_y // 9 + 35, WHITE, 28)
+            draw_text('Термодинамика', screen_size_x // 3 + 25, 3 * screen_size_y // 9 + 35, WHITE, 28)
+            draw_text('Электричество', screen_size_x // 3 + 25, 4 * screen_size_y // 9 + 35, WHITE, 28)
+            draw_text('Магнетизм', screen_size_x // 3 + 25, 5 * screen_size_y // 9 + 35, WHITE, 28)
+            draw_text('Оптика', screen_size_x // 3 + 25, 6 * screen_size_y // 9 + 35, WHITE, 28)
+            draw_text('Квантовая физика', screen_size_x // 3 + 25, 7 * screen_size_y // 9 + 35, WHITE, 28)
+
+        if self.step == 3:
+            self.scale = pygame.transform.scale(self.background_3, (screen_size_x, screen_size_y))
+            screen.blit(self.scale, (0, 0))
+            rect(screen, BLACKBOARD_3,
+                 (20, screen_size_y // 12, 4 * screen_size_x // 9 - 50, 3 * screen_size_y // 5))
+            draw_text('Что ж...', screen_size_x // 5 + 10, screen_size_y // 7, WHITE, 28)
+            draw_text('Давайте обсудим', screen_size_x // 5 + 10, screen_size_y // 7 + 30, WHITE, 28)
+            draw_text('эту тему...', screen_size_x // 5 + 10, screen_size_y // 7 + 60, WHITE, 28)
+            draw_text('(Поздравляем! Вы не', screen_size_x // 5 + 10, screen_size_y // 3, WHITE, 28)
+            draw_text('потратили время впустую', screen_size_x // 5 + 10, screen_size_y // 3 + 30, WHITE, 28)
+            draw_text('и заработали баллы!)', screen_size_x // 5 + 10, screen_size_y // 3 + 60, WHITE, 28)
+            rect(screen, WHITE, (30, screen_size_y // 2, 30 + 4 * screen_size_x // 9 - 100, 70), 3)
+            draw_text('Спасибо!', screen_size_x // 5 + 10, screen_size_y // 2 + 35, WHITE, 28)
+
+        if self.step == 4:
+            self.scale = pygame.transform.scale(self.background_4, (screen_size_x, screen_size_y))
+            screen.blit(self.scale, (0, 0))
+            ellipse(screen, BLACK, (0, screen_size_y // 5, 402, 202), 3)
+            ellipse(screen, WHITE, (0, screen_size_y // 5, 400, 200))
+            draw_text('Как же так...', screen_size_x // 5, screen_size_y // 3, BLACK, 30)
+            draw_text('Вы должны это знать!', screen_size_x // 5, screen_size_y // 3 + 35, BLACK, 30)
+            rect(screen, WHITE, (2 * screen_size_x // 3 - 40, screen_size_y // 9, 350, 270))
+            rect(screen, BLACK, (2 * screen_size_x // 3 - 40, screen_size_y // 9, 350, 270), 3)
+            draw_text('(Поздравляем! Вы', 4 * screen_size_x // 5, screen_size_y // 9 + 40, BLACK, 24)
+            draw_text('потратили время впустую', 4 * screen_size_x // 5, screen_size_y // 9 + 70, BLACK, 24)
+            draw_text('и ничего не заработали.)', 4 * screen_size_x // 5, screen_size_y // 9 + 100, BLACK, 24)
+            rect(screen, BLACK, (2 * screen_size_x // 3 - 30, screen_size_y // 9 + 170, 330, 70), 3)
+            draw_text('Вернуться к игре', 4 * screen_size_x // 5, screen_size_y // 9 + 205, BLACK, 24)
+
+        if self.step == 5:
+            self.scale = pygame.transform.scale(self.background, (screen_size_x, screen_size_y))
+            screen.blit(self.scale, (0, 0))
+            rect(screen, BLACKBOARD,
+                 (screen_size_x // 6, screen_size_y // 12, 10 * screen_size_x // 27, 4 * screen_size_y // 5 + 10))
+            draw_text('Ну тогда до свидания.', screen_size_x // 3 + 25, screen_size_y // 5, WHITE, 28)
+            rect(screen, WHITE, (screen_size_x // 6 + 10, 4 * screen_size_y // 9, 10 * screen_size_x // 27 - 20, 70), 3)
+            draw_text('До свидания.', screen_size_x // 3 + 25, 4 * screen_size_y // 9 + 35, WHITE, 28)
+
+
+    def answer(self, events):
+        for event in events:
+            self.done = quit_condition(event.type)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = event.pos
+                if (self.step == 1) and (mouse_x > screen_size_x // 6 + 10) and \
+                        (mouse_x < screen_size_x // 6 + 10 + 10 * screen_size_x // 27 - 20) and \
+                        (mouse_y > 4 * screen_size_y // 9) and (mouse_y < 4 * screen_size_y // 9 + 70):
+                    self.step = 2
+                elif (self.step == 1) and (mouse_x > screen_size_x // 6 + 10) and \
+                        (mouse_x < screen_size_x // 6 + 10 + 10 * screen_size_x // 27 - 20)\
+                        and (mouse_y > 6 * screen_size_y // 9) and (mouse_y < 6 * screen_size_y // 9 + 70):
+                    self.step = 5
+                elif (self.step == 2) and (mouse_x > screen_size_x // 6 + 10) and \
+                        (mouse_x < screen_size_x // 6 + 10 + 10 * screen_size_x // 27 - 20) \
+                        and (mouse_y > 2 * screen_size_y // 9) and (mouse_y < 8 * screen_size_y // 9 + 70):
+                    self.step = randint(3, 4)
+                elif (self.step == 3) and (mouse_x > 30) and (mouse_x < 4 * screen_size_x // 9 - 40) and \
+                        (mouse_y > screen_size_y // 2) and (mouse_y < screen_size_y // 2 + 70):
+                    self.stream_is_on = False
+                elif (self.step == 4) and (mouse_x > 2 * screen_size_x // 3 - 30) + (mouse_x < 2 * screen_size_x // 3 + 300)\
+                        and (mouse_y > screen_size_y // 9 + 170) and (mouse_y < screen_size_y // 9 + 240):
+                    self.stream_is_on = False
+                elif (self.step == 5) and (mouse_x > screen_size_x // 6 + 10) and \
+                        (mouse_x < screen_size_x // 6 + 10 + 10 * screen_size_x // 27 - 20) and \
+                        (mouse_y > 4 * screen_size_y // 9) and (mouse_y < 4 * screen_size_y // 9 + 70):
+                    self.stream_is_on = False
+
+
 class Editor():
     def __init__(self, width_of_pictures, distance_between_roads):
-        '''
-        Set parameters and thier meanings
-        '''
+        """
+        Set parameters and their meanings
+        """
         self.done = 0
         self.step = (screen_size[0] - 2 * width_of_pictures - distance_between_roads * 2) // 3 + distance_between_roads
         self.hero = Hero(coord=[screen_size[0] // 2, screen_size[1] - 20], gender=1)
@@ -202,6 +338,9 @@ class Editor():
         self.timer = Timer(self)
         self.mood_scale = Mood_scale(self)
         self.boost_scale = Boost_scale(self)
+        self.boost_color = pygame.Surface((screen_size_x, screen_size_y))
+        self.boost_color.set_alpha(100)
+        self.stream = Stream()
 
     def user_events(self, events):
         '''
@@ -254,7 +393,6 @@ class Editor():
 		Turns on all object's drawings processes
 		'''
         draw_road(self.width_of_pictures, self.distance_between_roads)
-        self.hero.draw()
         for obstacle in self.obstacles:
             obstacle.draw()
         for boost in self.boosts:
@@ -262,16 +400,22 @@ class Editor():
         self.mood_scale.draw()
         self.boost_scale.draw()
         self.timer.draw()
+        self.hero.draw()
+        self.stream.draw_button()
 
     def check_bumping(self):
         '''
 		Looks if it's time for the hero to die under the obstacle
 		'''
         for obstacle in self.obstacles:
-            if self.hero.coord[1] - 45 <= obstacle.coord[1] + obstacle.width:
-                if self.hero.number_of_road == obstacle.number_of_road:
+            if self.hero.coord[1] - 65 <= obstacle.coord[1] + obstacle.width:
+                if (self.hero.number_of_road == obstacle.number_of_road) and not (self.boost_scale.boost_points > 0):
                     self.hero.was_kicked = True
                     return True
+                if (self.hero.number_of_road == obstacle.number_of_road) and (self.boost_scale.boost_points > 0):
+                    ellipse(screen, BLACK, (self.hero.coord[0] + 50, self.hero.coord[1] - 110, 150, 70), 2)
+                    ellipse(screen, WHITE, (self.hero.coord[0] + 50, self.hero.coord[1] - 110, 149, 69))
+                    draw_text('Я не хочу спать!', self.hero.coord[0] + 125, self.hero.coord[1] - 75, BLACK, 16)
 
     def hero_boosting(self):
         """
@@ -284,12 +428,25 @@ class Editor():
                     boost.is_alive = False
                     return True
 
+    def boost_time(self):
+        if ((self.timer.time % 100 - self.timer.time % 10) // 10) % 2 == 0:
+            color = RED
+        else:
+            color = LIL
+        self.boost_color.fill(color)
+        screen.blit(self.boost_color, (0, 0))
+        circle_sur = pygame.Surface((screen_size_x, screen_size_y))
+        circle(circle_sur, BLUE, self.hero.coord, 85)
+        circle_sur.set_alpha(100)
+        screen.blit(circle_sur, (0, 0))
+        draw_text('Ты полон энергии и неуязвим!', screen_size_x // 2, 15, CYAN, 20)
+
     def process(self, events):
         '''
 		Manager function for all processes in program. It creates obstacles and control their movement, closes program because of pressed [X] button
 		starts drawing of all process, looks if the hero was kicked
 		'''
-        if not self.test_is_on:
+        if (not self.test_is_on) and (not self.stream.stream_is_on):
             self.time += 1
             if self.time % 40 == 0:
                 self.obstacles.append(
@@ -303,14 +460,24 @@ class Editor():
             self.move_boosts()
             if self.hero_boosting():
                 self.boost_scale.boost_points = 100
+                self.mood_scale.mood_points += 200
+                if self.mood_scale.mood_points > 1000:
+                    self.mood_scale.mood_points = 1000
+            if self.boost_scale.boost_points > 0:
+                self.boost_time()
             if self.mood_scale.mood_points <= 0:
                 self.done = 1
             if self.check_bumping():
                 self.done = 2
-            if self.time % 200 == 0:
+            self.stream.button_check(events)
+            if self.time % 500 == 0:
                 self.test_is_on = True
                 self.Test = Ivanov_test()
-        else:
+        elif self.stream.stream_is_on:
+            self.stream.draw()
+            self.stream.answer(events)
+            self.done = self.stream.done
+        elif self.test_is_on:
             return_list = self.Test.progress(events)
             self.done = return_list[0]
             self.test_is_on = return_list[1]
