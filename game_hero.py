@@ -56,7 +56,7 @@ class Hero():
 
     def draw(self):
         '''
-        Draws the hero, attention: self.coord works like coordinatese of the senter of the hero
+        Draws the hero, attention: self.coord works like coordinatese of the center of the hero
         '''
 
         if self.gender == 1:
@@ -64,12 +64,12 @@ class Hero():
         elif self.gender == 0:
             player_surface = pygame.transform.scale(female_model, (self.size_x, self.size_y))
 
-        screen.blit(player_surface, (self.coord[0] - 38, -75 + self.coord[1]), ((self.size_x / 4)*(int(self.step) - 1), 5 + (self.size_y / 4)*self.direction, self.size_x / 4, self.size_y / 4))
+        screen.blit(player_surface, (self.coord[0] - 38, -75 + self.coord[1]), (((self.size_x + 4) // 4)*(int(self.step) - 1), 5 + (self.size_y // 4)*self.direction, self.size_x / 4, self.size_y / 4))
 
-        if self.step > 4.9:
+        if self.step > 4.4:
             self.step = 1
         else:
-            self.step += 0.1
+            self.step += 0.5
 
 
 if __name__ == "__main__":
