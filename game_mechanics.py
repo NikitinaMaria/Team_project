@@ -208,6 +208,7 @@ class Editor():
         self.boost_color = pygame.Surface((screen_size_x, screen_size_y))
         self.boost_color.set_alpha(100)
         self.stream = Stream()
+        self.analit = Analit()
         self.time_for_Kozhevnikov_test = 250
 
     def user_events(self, events):
@@ -270,6 +271,7 @@ class Editor():
         self.timer.draw()
         self.hero.draw()
         self.stream.draw_button()
+        self.analit.draw_sweater()
 
     def check_bumping(self):
         '''
@@ -314,7 +316,7 @@ class Editor():
 		Manager function for all processes in program. It creates obstacles and control their movement, closes program because of pressed [X] button
 		starts drawing of all process, looks if the hero was kicked
 		'''
-        if (not self.test_is_on) and (not self.stream.stream_is_on):
+        if (not self.test_is_on) and (not self.stream.stream_is_on) and (not self.analit.analit_is_on):
             self.time += 1
             if self.time % 40 == 0:
                 self.obstacles.append(
@@ -338,6 +340,7 @@ class Editor():
             if self.check_bumping():
                 self.done = 2
             self.stream.button_check(events)
+            self.analit.check_sweater(events)
             if self.time % 500 == 0 and self.time != self.time_for_Kozhevnikov_test:
                 self.test_is_on = True
                 self.Test = Ivanov_test()
@@ -356,6 +359,10 @@ class Editor():
             self.stream.draw()
             self.stream.answer(events)
             self.done = self.stream.done
+        elif self.analit.analit_is_on:
+            self.analit.draw()
+            self.analit.answer(events)
+            self.done = self.analit.done
         elif self.test_is_on:
             return_list = self.Test.progress(events)
             self.done = return_list[0]
