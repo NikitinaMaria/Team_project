@@ -5,6 +5,8 @@ import game_mechanics
 from pygame.draw import *
 from game_mechanics import *
 
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 GOLD = (238, 201, 0)
 BLACKBOARD = (65, 86, 71)
 BLACKBOARD_3 = (81, 78, 36)
@@ -148,6 +150,142 @@ class Stream:
                         (mouse_x < screen_size_x // 6 + 10 + 10 * screen_size_x // 27 - 20) and \
                         (mouse_y > 4 * screen_size_y // 9) and (mouse_y < 4 * screen_size_y // 9 + 70):
                     self.stream_is_on = False
+
+
+class Analit:
+    def __init__(self):
+        self.ask_time = 150
+        self.sweater_time = 200
+        self.sweater_is_available = True
+        self.done = 0
+        self.step = 1
+
+        # Images
+        self.sweater = pygame.image.load('images/sweater.png')
+        self.start_page = pygame.image.load('images/start_page.png')
+        self.two_hours = pygame.image.load('images/2_hours.jpg')
+        self.bla_bla = pygame.image.load('images/bla_0.png')
+        self.bla_0 = pygame.image.load('images/bla_1.png')
+        self.bla_1 = pygame.image.load('images/bla_2.png')
+        self.bla_2 = pygame.image.load('images/bla_3.png')
+        self.bla_3 = pygame.image.load('images/bla_4.png')
+        self.bla_4 = pygame.image.load('images/bla_5.png')
+        self.bla_5 = pygame.image.load('images/bla_6.png')
+        self.bla_6 = pygame.image.load('images/bla_7.png')
+        self.bla_7 = pygame.image.load('images/bla_8.png')
+        self.bla_8 = pygame.image.load('images/bla_9.png')
+        self.bla_9 = pygame.image.load('images/bla_10.png')
+        self.bla = [self.bla_0, self.bla_1, self.bla_2, self.bla_3, self.bla_4, self.bla_5, self.bla_6, self.bla_7,
+                    self.bla_8, self.bla_9]
+        self.bla_x = []
+        self.bla_y = []
+        for i in range(10):
+            self.bla_x.append(randint(0, screen_size_x - 300))
+            self.bla_y.append(randint(0, screen_size_y - 400))
+
+        self.bla_bla_time = 0
+        self.bla_bla_scale = pygame.transform.scale(self.bla_bla, (800, 1000))
+        self.bla_bla_scale.set_colorkey(WHITE)
+
+        self.width = 80
+        self.length = 100
+        self.scale = pygame.transform.scale(self.sweater, (self.length, self.width))
+        self.coord_x = randint(0, screen_size_x - 100)
+        self.coord_y = self.coord_y = randint(100, 500)
+        self.speed_x = randint(-15, 15)
+        self.speed_y = randint(-15, 15)
+        self.analit_is_on = False
+
+    def draw_sweater(self):
+        if self.sweater_is_available:
+            self.sweater_time -= 1
+            self.scale = pygame.transform.scale(self.sweater, (self.length, self.width))
+            self.coord_x += self.speed_x
+            self.coord_y += self.speed_y
+            if self.coord_x <= 0:
+                self.coord_x = 0
+                self.speed_x = - self.speed_x
+            if self.coord_y <= 0:
+                self.coord_y = 0
+                self.speed_y = - self.speed_y
+            if self.coord_x >= screen_size_x - self.length:
+                self.coord_x = screen_size_x - self.length
+                self.speed_x = - self.speed_x
+            if self.coord_y >= screen_size_y - self.width:
+                self.coord_y = screen_size_y - self.width
+                self.speed_y = - self.speed_y
+            screen.blit(self.scale, (self.coord_x, self.coord_y))
+
+    def check_sweater(self, events):
+        for event in events:
+            if self.sweater_is_available and (event.type == pygame.MOUSEBUTTONDOWN):
+                mouse_x, mouse_y = event.pos
+                if (mouse_x > self.coord_x) and (mouse_x < self.coord_x + self.length) and (mouse_y > self.coord_y) and \
+                        (mouse_y < self.coord_y + self.width):
+                    self.sweater_is_available = False
+                    self.analit_is_on = True
+
+    def draw(self):
+        self.scale = pygame.transform.scale(self.start_page, (screen_size_x, screen_size_y))
+        screen.blit(self.scale, (0, 0))
+        if self.step == 1:
+            ellipse(screen, BLACK, (screen_size_x // 5, screen_size_y // 5, 302, 202), 3)
+            ellipse(screen, WHITE, (screen_size_x // 5, screen_size_y // 5, 300, 200))
+            draw_text('Здавствуйте!', screen_size_x // 5 + 150, screen_size_y // 5 + 60, BLACK, 24)
+            draw_text('Какую тему Вы', screen_size_x // 5 + 150, screen_size_y // 5 + 90, BLACK, 24)
+            draw_text('хотели бы обсудить?', screen_size_x // 5 + 150, screen_size_y // 5 + 120, BLACK, 24)
+            ellipse(screen, BLACK, (screen_size_x // 5, 3 * screen_size_y // 5, 402, 101), 3)
+            ellipse(screen, WHITE, (screen_size_x // 5, 3 * screen_size_y // 5, 400, 100))
+            draw_text('Давайте обсудим домашку', screen_size_x // 5 + 200, 3 * screen_size_y // 5 + 50, BLACK, 24)
+            ellipse(screen, BLACK, (screen_size_x // 5, 4 * screen_size_y // 5, 402, 101), 3)
+            ellipse(screen, WHITE, (screen_size_x // 5, 4 * screen_size_y // 5, 400, 100))
+            draw_text('Что-то другое...', screen_size_x // 5 + 200, 4 * screen_size_y // 5 + 50, BLACK, 24)
+        if self.step == 2:
+            ellipse(screen, BLACK, (screen_size_x // 5, screen_size_y // 5 - 40, 402, 302), 3)
+            ellipse(screen, WHITE, (screen_size_x // 5, screen_size_y // 5 - 40, 400, 300))
+            draw_text('Поздравляю!', screen_size_x // 5 + 200, screen_size_y // 5 + 60, BLACK, 24)
+            draw_text('Вы сделали мудрый выбор,', screen_size_x // 5 + 200, screen_size_y // 5 + 90, BLACK, 24)
+            draw_text('и усвоенный вами материал', screen_size_x // 5 + 200, screen_size_y // 5 + 120, BLACK, 24)
+            draw_text('наверняка пригодится Вам', screen_size_x // 5 + 200, screen_size_y // 5 + 150, BLACK, 24)
+            draw_text('на экзамене.', screen_size_x // 5 + 200, screen_size_y // 5 + 180, BLACK, 24)
+            ellipse(screen, BLACK, (screen_size_x // 5, 4 * screen_size_y // 5, 402, 101), 3)
+            ellipse(screen, WHITE, (screen_size_x // 5, 4 * screen_size_y // 5, 400, 100))
+            draw_text('Спасибо!', screen_size_x // 5 + 200, 4 * screen_size_y // 5 + 50, BLACK, 24)
+        if self.step == 3:
+            if self.bla_bla_time == 0:
+                pygame.mixer.music.load('audio/Fine.mp3')
+                pygame.mixer.music.play()
+            if self.bla_bla_time < 400:
+                for i in range(10):
+                    if self.bla_bla_time > i * 40:
+                        self.bla_scale = pygame.transform.scale(self.bla[i], (350, 500))
+                        screen.blit(self.bla_scale, (self.bla_x[i], self.bla_y[i]))
+                screen.blit(self.bla_bla_scale, (100, - self.bla_bla_time))
+                self.bla_bla_time += 2
+            elif (self.bla_bla_time >= 400) and (self.bla_bla_time < 470):
+                if self.bla_bla_time == 400:
+                    pygame.mixer.music.load('audio/Later.mp3')
+                    pygame.mixer.music.play()
+                self.scale = pygame.transform.scale(self.two_hours, (screen_size_x, screen_size_y))
+                screen.blit(self.scale, (0, 0))
+                self.bla_bla_time += 2
+            else:
+                self.analit_is_on = False
+
+    def answer(self, events):
+        for event in events:
+            self.done = quit_condition(event.type)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = event.pos
+                if (self.step == 1) and (mouse_x >= screen_size_x // 5) and (mouse_x <= screen_size_x // 5 + 400)\
+                        and (mouse_y >= 3 * screen_size_y // 5) and (mouse_y <= 3 * screen_size_y // 5 + 100):
+                    self.step = 2
+                if (self.step == 1) and (mouse_x >= screen_size_x // 5) and (mouse_x <= screen_size_x // 5 + 400)\
+                        and (mouse_y >= 4 * screen_size_y // 5) and (mouse_y <= 4 * screen_size_y // 5 + 100):
+                    self.step = 3
+                if (self.step == 2) and (mouse_x >= screen_size_x // 5) and (mouse_x <= screen_size_x // 5 + 400)\
+                        and (mouse_y >= 4 * screen_size_y // 5) and (mouse_y <= 4 * screen_size_y // 5 + 100):
+                    self.analit_is_on = False
 
 
 class Ivanov_test():
