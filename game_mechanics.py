@@ -344,6 +344,7 @@ class Editor():
             if self.time % 200 == 0:
                 self.stream.stream_is_available = True
                 self.stream.click_time = 100
+                self.stream.step = 1
             if self.time >= self.time_for_Kozhevnikov_test - 50 and self.time <= self.time_for_Kozhevnikov_test and self.time % 6 != 0:
                 rect(screen, RED, (screen_size[0] - self.width_of_pictures, 2 * screen_size[1] // 3, 3 * self.width_of_pictures // 4, screen_size[1] // 8))
                 insert_text('Attention', 'Game-font.ttf', WHITE, (screen_size[0] - 6 * self.width_of_pictures // 10, 2 * screen_size[1] // 3 + screen_size[1] // 30), screen_size[1] // 30)

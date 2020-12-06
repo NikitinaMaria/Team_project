@@ -9,13 +9,20 @@ GOLD = (238, 201, 0)
 BLACKBOARD = (65, 86, 71)
 BLACKBOARD_3 = (81, 78, 36)
 
+
+def quit_condition(pressed_button):
+    """
+	Checks if [X] button was pressed
+	"""
+    final = 0
+    if pressed_button == pygame.QUIT:
+        final = 1
+    return final
+
+
 class Stream:
     def __init__(self):
-        self.side = randint(1, 2)
-        if self.side == 1:
-            self.coord_x = randint(0, 150)
-        else:
-            self.coord_x = randint(screen_size_x - 250, screen_size_x - 130)
+        self.coord_x = randint(0, 150)
         self.coord_y = randint(150, 400)
         self.click_time = 100
         self.width = 120
@@ -116,7 +123,7 @@ class Stream:
 
     def answer(self, events):
         for event in events:
-            self.done = game_mechanics.quit_condition(event.type)
+            self.done = quit_condition(event.type)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = event.pos
                 if (self.step == 1) and (mouse_x > screen_size_x // 6 + 10) and \
