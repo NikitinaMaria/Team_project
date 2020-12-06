@@ -6,7 +6,7 @@ from pygame.draw import *
 from game_mechanics import *
 
 GOLD = (238, 201, 0)
-
+BLACKBOARD = (65, 86, 71)
 
 class Stream:
     def __init__(self):
@@ -115,7 +115,7 @@ class Stream:
 
     def answer(self, events):
         for event in events:
-            self.done = quit_condition(event.type)
+            self.done = game_mechanics.quit_condition(event.type)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = event.pos
                 if (self.step == 1) and (mouse_x > screen_size_x // 6 + 10) and \
