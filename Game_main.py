@@ -1,6 +1,7 @@
 import pygame
 from game_stats import *
 from game_mechanics import *
+from game_menu import *
 
 pygame.init()
 
@@ -17,6 +18,8 @@ for i in range(3):
     explanatories.append(Explanatory(i + 1))
 
 edit_events = Editor(250, 6)
+pause_menu = Pause(False)
+main_menu = Title(True)
 
 clock = pygame.time.Clock()
 done = False
@@ -28,7 +31,22 @@ while not done:
     clock.tick(FPS)
     pygame.display.update()
     screen.fill(WHITE)
-    done = edit_events.process(pygame.event.get())
+
+    keys = pygame.key.get_pressed()
+
+    if main_menu.title == True:
+        main_menu.render()
+        main_menu.check(pygame.event.get())
+    else:
+
+        if keys[pygame.K_ESCAPE] and (pause_menu.pause == False):
+            pause_menu.pause = True
+        if pause_menu.pause:
+            pause_menu.render()
+            pause_menu.check(pygame.event.get())
+
+        else:
+            done = edit_events.process(pygame.event.get())
 
 if done == 2:
     show_game_over_table(done)
