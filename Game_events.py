@@ -7,6 +7,141 @@ from game_mechanics import *
 
 GOLD = (238, 201, 0)
 
+
+class Stream:
+    def __init__(self):
+        self.side = randint(1, 2)
+        if self.side == 1:
+            self.coord_x = randint(0, 150)
+        else:
+            self.coord_x = randint(screen_size_x - 250, screen_size_x - 130)
+        self.coord_y = randint(150, 400)
+        self.click_time = 100
+        self.width = 120
+        self.length = 130
+        self.youtube = pygame.image.load('images/youtube.png')
+        self.background = pygame.image.load('images/background.jpg')
+        self.background_3 = pygame.image.load('images/background_3.png')
+        self.background_4 = pygame.image.load('images/background_4.png')
+        self.scale = pygame.transform.scale(self.youtube, (self.length, self.width))
+        self.stream_is_available = False
+        self.stream_is_on = False
+        self.done = 0
+        self.step = 1
+
+    def draw_button(self):
+        if self.stream_is_available:
+            self.click_time -= 1
+            self.scale = pygame.transform.scale(self.youtube, (self.length, self.width))
+            screen.blit(self.scale, (self.coord_x, self.coord_y))
+            if self.click_time <= 0:
+                self.stream_is_available = False
+
+    def button_check(self, events):
+        for event in events:
+            if self.stream_is_available and (event.type == pygame.MOUSEBUTTONDOWN):
+                mouse_x, mouse_y = event.pos
+                if (mouse_x > self.coord_x) and (mouse_x < self.coord_x + self.length) and (mouse_y > self.coord_y) and \
+                        (mouse_y < self.coord_y + self.width):
+                    self.click_time = 0
+                    self.stream_is_on = True
+
+    def draw(self):
+        if self.step == 1:
+            self.scale = pygame.transform.scale(self.background, (screen_size_x, screen_size_y))
+            screen.blit(self.scale, (0, 0))
+            rect(screen, BLACKBOARD, (screen_size_x // 6, screen_size_y // 12, 10 * screen_size_x // 27, 4 * screen_size_y // 5 + 10))
+            draw_text('Хотите задать вопрос?', screen_size_x // 3 + 25, screen_size_y // 5, WHITE, 28)
+            rect(screen, WHITE, (screen_size_x // 6 + 10, 4 * screen_size_y // 9, 10 * screen_size_x // 27 - 20, 70), 3)
+            draw_text('Хочу!', screen_size_x // 3 + 25, 4 * screen_size_y // 9 + 35, WHITE, 28)
+            rect(screen, WHITE, (screen_size_x // 6 + 10, 6 * screen_size_y // 9, 10 * screen_size_x // 27 - 20, 70), 3)
+            draw_text('Пожалуй, нет...', screen_size_x // 3 + 25, 6 * screen_size_y // 9 + 35, WHITE, 28)
+
+        if self.step == 2:
+            self.scale = pygame.transform.scale(self.background, (screen_size_x, screen_size_y))
+            screen.blit(self.scale, (0, 0))
+            rect(screen, BLACKBOARD,
+                 (screen_size_x // 6, screen_size_y // 12, 10 * screen_size_x // 27, 4 * screen_size_y // 5 + 10))
+            draw_text('Хорошо.', screen_size_x // 3 + 25, screen_size_y // 7, WHITE, 28)
+            draw_text('Давайте ваш вопрос.', screen_size_x // 3 + 25, screen_size_y // 7 + 30, WHITE, 28)
+            for i in range(6):
+                rect(screen, WHITE,
+                     (screen_size_x // 6 + 10, (i+2) * screen_size_y // 9, 10 * screen_size_x // 27 - 20, 70), 3)
+            draw_text('Механика', screen_size_x // 3 + 25, 2 * screen_size_y // 9 + 35, WHITE, 28)
+            draw_text('Термодинамика', screen_size_x // 3 + 25, 3 * screen_size_y // 9 + 35, WHITE, 28)
+            draw_text('Электричество', screen_size_x // 3 + 25, 4 * screen_size_y // 9 + 35, WHITE, 28)
+            draw_text('Магнетизм', screen_size_x // 3 + 25, 5 * screen_size_y // 9 + 35, WHITE, 28)
+            draw_text('Оптика', screen_size_x // 3 + 25, 6 * screen_size_y // 9 + 35, WHITE, 28)
+            draw_text('Квантовая физика', screen_size_x // 3 + 25, 7 * screen_size_y // 9 + 35, WHITE, 28)
+
+        if self.step == 3:
+            self.scale = pygame.transform.scale(self.background_3, (screen_size_x, screen_size_y))
+            screen.blit(self.scale, (0, 0))
+            rect(screen, BLACKBOARD_3,
+                 (20, screen_size_y // 12, 4 * screen_size_x // 9 - 50, 3 * screen_size_y // 5))
+            draw_text('Что ж...', screen_size_x // 5 + 10, screen_size_y // 7, WHITE, 28)
+            draw_text('Давайте обсудим', screen_size_x // 5 + 10, screen_size_y // 7 + 30, WHITE, 28)
+            draw_text('эту тему...', screen_size_x // 5 + 10, screen_size_y // 7 + 60, WHITE, 28)
+            draw_text('(Поздравляем! Вы не', screen_size_x // 5 + 10, screen_size_y // 3, WHITE, 28)
+            draw_text('потратили время впустую', screen_size_x // 5 + 10, screen_size_y // 3 + 30, WHITE, 28)
+            draw_text('и заработали баллы!)', screen_size_x // 5 + 10, screen_size_y // 3 + 60, WHITE, 28)
+            rect(screen, WHITE, (30, screen_size_y // 2, 30 + 4 * screen_size_x // 9 - 100, 70), 3)
+            draw_text('Спасибо!', screen_size_x // 5 + 10, screen_size_y // 2 + 35, WHITE, 28)
+
+        if self.step == 4:
+            self.scale = pygame.transform.scale(self.background_4, (screen_size_x, screen_size_y))
+            screen.blit(self.scale, (0, 0))
+            ellipse(screen, BLACK, (0, screen_size_y // 5, 402, 202), 3)
+            ellipse(screen, WHITE, (0, screen_size_y // 5, 400, 200))
+            draw_text('Как же так...', screen_size_x // 5, screen_size_y // 3, BLACK, 30)
+            draw_text('Вы должны это знать!', screen_size_x // 5, screen_size_y // 3 + 35, BLACK, 30)
+            rect(screen, WHITE, (2 * screen_size_x // 3 - 40, screen_size_y // 9, 350, 270))
+            rect(screen, BLACK, (2 * screen_size_x // 3 - 40, screen_size_y // 9, 350, 270), 3)
+            draw_text('(Поздравляем! Вы', 4 * screen_size_x // 5, screen_size_y // 9 + 40, BLACK, 24)
+            draw_text('потратили время впустую', 4 * screen_size_x // 5, screen_size_y // 9 + 70, BLACK, 24)
+            draw_text('и ничего не заработали.)', 4 * screen_size_x // 5, screen_size_y // 9 + 100, BLACK, 24)
+            rect(screen, BLACK, (2 * screen_size_x // 3 - 30, screen_size_y // 9 + 170, 330, 70), 3)
+            draw_text('Вернуться к игре', 4 * screen_size_x // 5, screen_size_y // 9 + 205, BLACK, 24)
+
+        if self.step == 5:
+            self.scale = pygame.transform.scale(self.background, (screen_size_x, screen_size_y))
+            screen.blit(self.scale, (0, 0))
+            rect(screen, BLACKBOARD,
+                 (screen_size_x // 6, screen_size_y // 12, 10 * screen_size_x // 27, 4 * screen_size_y // 5 + 10))
+            draw_text('Ну тогда до свидания.', screen_size_x // 3 + 25, screen_size_y // 5, WHITE, 28)
+            rect(screen, WHITE, (screen_size_x // 6 + 10, 4 * screen_size_y // 9, 10 * screen_size_x // 27 - 20, 70), 3)
+            draw_text('До свидания.', screen_size_x // 3 + 25, 4 * screen_size_y // 9 + 35, WHITE, 28)
+
+
+    def answer(self, events):
+        for event in events:
+            self.done = quit_condition(event.type)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = event.pos
+                if (self.step == 1) and (mouse_x > screen_size_x // 6 + 10) and \
+                        (mouse_x < screen_size_x // 6 + 10 + 10 * screen_size_x // 27 - 20) and \
+                        (mouse_y > 4 * screen_size_y // 9) and (mouse_y < 4 * screen_size_y // 9 + 70):
+                    self.step = 2
+                elif (self.step == 1) and (mouse_x > screen_size_x // 6 + 10) and \
+                        (mouse_x < screen_size_x // 6 + 10 + 10 * screen_size_x // 27 - 20)\
+                        and (mouse_y > 6 * screen_size_y // 9) and (mouse_y < 6 * screen_size_y // 9 + 70):
+                    self.step = 5
+                elif (self.step == 2) and (mouse_x > screen_size_x // 6 + 10) and \
+                        (mouse_x < screen_size_x // 6 + 10 + 10 * screen_size_x // 27 - 20) \
+                        and (mouse_y > 2 * screen_size_y // 9) and (mouse_y < 8 * screen_size_y // 9 + 70):
+                    self.step = randint(3, 4)
+                elif (self.step == 3) and (mouse_x > 30) and (mouse_x < 4 * screen_size_x // 9 - 40) and \
+                        (mouse_y > screen_size_y // 2) and (mouse_y < screen_size_y // 2 + 70):
+                    self.stream_is_on = False
+                elif (self.step == 4) and (mouse_x > 2 * screen_size_x // 3 - 30) + (mouse_x < 2 * screen_size_x // 3 + 300)\
+                        and (mouse_y > screen_size_y // 9 + 170) and (mouse_y < screen_size_y // 9 + 240):
+                    self.stream_is_on = False
+                elif (self.step == 5) and (mouse_x > screen_size_x // 6 + 10) and \
+                        (mouse_x < screen_size_x // 6 + 10 + 10 * screen_size_x // 27 - 20) and \
+                        (mouse_y > 4 * screen_size_y // 9) and (mouse_y < 4 * screen_size_y // 9 + 70):
+                    self.stream_is_on = False
+
+
 class Ivanov_test():
     def __init__(self):
         '''
