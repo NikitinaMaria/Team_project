@@ -209,7 +209,7 @@ class Editor():
         self.boost_color.set_alpha(100)
         self.stream = Stream()
         self.angem = Angem()
-        self.time_for_Kozhevnikov_test = 700
+        self.time_for_Kozhevnikov_test = 250
 
     def user_events(self, events):
         '''
@@ -340,7 +340,7 @@ class Editor():
             if self.check_bumping():
                 self.done = 2
             self.stream.button_check(events)
-            if self.time % 100 == 0 and self.time != self.time_for_Kozhevnikov_test:
+            if self.time % 500 == 0 and self.time != self.time_for_Kozhevnikov_test:
                 self.test_is_on = True
                 self.Test = Ivanov_test()
             if self.time % 200 == 0:
