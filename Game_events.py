@@ -7,6 +7,7 @@ from game_mechanics import *
 
 GOLD = (238, 201, 0)
 BLACKBOARD = (65, 86, 71)
+BLACKBOARD_3 = (81, 78, 36)
 
 class Stream:
     def __init__(self):
