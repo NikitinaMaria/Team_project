@@ -208,7 +208,6 @@ class Editor():
         self.boost_color = pygame.Surface((screen_size_x, screen_size_y))
         self.boost_color.set_alpha(100)
         self.stream = Stream()
-        self.angem = Angem()
         self.time_for_Kozhevnikov_test = 250
 
     def user_events(self, events):
@@ -271,7 +270,6 @@ class Editor():
         self.timer.draw()
         self.hero.draw()
         self.stream.draw_button()
-        self.angem.draw_sweater()
 
     def check_bumping(self):
         '''
