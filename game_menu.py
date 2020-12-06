@@ -1,4 +1,5 @@
 from pygame.locals import *
+from game_hero import Hero
 import pygame, sys
 
 clock = pygame.time.Clock()
@@ -29,15 +30,33 @@ def draw_text(text, font, color, surface, x, y):
     textrect.topleft = (x, y)
     surface.blit(textobj, textrect)
 
+hero = Hero()
+def preview(gender, x, y):
+    if gender == 1:
+        hero.gender = 1
+        hero.direction = 2
+        hero.draw(1, 100, 100)
+
+'''
+pos - Position - (x, y)
+size - Size - (length, width)
+
+Draws button and text
+'''
+def make_button(text, pos, size):
+    button = pygame.Rect(pos[0], pos[1], size[0], size[1])
+    pygame.draw.rect(screen, (255, 0, 0), button)
+    draw_text(text, font, BLACK, screen, pos[0], pos[1])
+    return(button)
+
 
 class Pause():
-    def __init__(self, pause):
+    def __init__(self, pause, screen_size_x, screen_size_y):
         self.pause = False
-        self.button_1 = pygame.Rect(50, 100, 200, 50)
-        self.button_2 = pygame.Rect(50, 200, 200, 50)
-        self.button_3 = pygame.Rect(50, 300, 200, 50)
         self.main = True
         self.options = False
+        self.button_size_x = screen_size_x // 5
+        self.button_size_y = screen_size_y // 10
 
     def render(self):
         screen.fill(BLACK)
@@ -45,32 +64,20 @@ class Pause():
         if self.main:
             draw_text('Pause menu', font, WHITE, screen, 20, 20)
 
-            self.button_1 = pygame.Rect(50, 100, 200, 50)
-            pygame.draw.rect(screen, (255, 0, 0), self.button_1)
-            draw_text('Continue', font, BLACK, screen, 50, 100)
+            self.button_1 = make_button('Continue', (self.button_size_y, self.button_size_x // 2 ), (self.button_size_x, self.button_size_y))
 
-            self.button_2 = pygame.Rect(50, 200, 200, 50)
-            pygame.draw.rect(screen, (255, 0, 0), self.button_2)
-            draw_text('Options', font, BLACK, screen, 50, 200)
+            self.button_2 = make_button('Options', (self.button_size_y, self.button_size_x ), (self.button_size_x, self.button_size_y))
 
-            self.button_3 = pygame.Rect(50, 300, 200, 50)
-            pygame.draw.rect(screen, (255, 0, 0), self.button_3)
-            draw_text('Quit', font, BLACK, screen, 50, 300)
+            self.button_3 = make_button('Quit', (self.button_size_y, (3*self.button_size_x // 2) ), (self.button_size_x, self.button_size_y))
 
         if self.options:
             draw_text('Options', font, WHITE, screen, 20, 20)
 
-            self.button_1 = pygame.Rect(50, 100, 200, 50)
-            pygame.draw.rect(screen, (255, 0, 0), self.button_1)
-            draw_text('Option #1', font, BLACK, screen, 50, 100)
+            self.button_1 = make_button('Option #1', (self.button_size_y, self.button_size_x // 2 ), (self.button_size_x, self.button_size_y))
 
-            self.button_2 = pygame.Rect(50, 200, 200, 50)
-            pygame.draw.rect(screen, (255, 0, 0), self.button_2)
-            draw_text('Option #2', font, BLACK, screen, 50, 200)
+            self.button_2 = make_button('Option #2', (self.button_size_y, self.button_size_x ), (self.button_size_x, self.button_size_y))
 
-            self.button_3 = pygame.Rect(50, 300, 200, 50)
-            pygame.draw.rect(screen, (255, 0, 0), self.button_3)
-            draw_text('Back', font, BLACK, screen, 50, 300)
+            self.button_3 = make_button('Back', (self.button_size_y, (3*self.button_size_x // 2)), (self.button_size_x, self.button_size_y))
 
     def check(self, events):
         mouse_x, mouse_y = pygame.mouse.get_pos(events)
@@ -118,13 +125,12 @@ class Pause():
                     sys.exit()
 
 class Title():
-    def __init__(self, title):
+    def __init__(self, title, screen_size_x, screen_size_y):
         self.title = True
-        self.button_1 = pygame.Rect(50, 100, 200, 50)
-        self.button_2 = pygame.Rect(50, 200, 200, 50)
-        self.button_3 = pygame.Rect(50, 300, 200, 50)
         self.main = True
         self.options = False
+        self.button_size_x = screen_size_x // 5
+        self.button_size_y = screen_size_y // 10
 
     def render(self):
         screen.fill(BLACK)
@@ -132,32 +138,20 @@ class Title():
         if self.main:
             draw_text('Main menu', font, WHITE, screen, 20, 20)
 
-            self.button_1 = pygame.Rect(50, 100, 200, 50)
-            pygame.draw.rect(screen, (255, 0, 0), self.button_1)
-            draw_text('Start!', font, BLACK, screen, 50, 100)
+            self.button_1 = make_button('Start !', (self.button_size_y, self.button_size_x // 2 ), (self.button_size_x, self.button_size_y))
 
-            self.button_2 = pygame.Rect(50, 200, 200, 50)
-            pygame.draw.rect(screen, (255, 0, 0), self.button_2)
-            draw_text('Options', font, BLACK, screen, 50, 200)
+            self.button_2 = make_button('Options', (self.button_size_y, self.button_size_x ), (self.button_size_x, self.button_size_y))
 
-            self.button_3 = pygame.Rect(50, 300, 200, 50)
-            pygame.draw.rect(screen, (255, 0, 0), self.button_3)
-            draw_text('Quit', font, BLACK, screen, 50, 300)
+            self.button_3 = make_button('Quit', (self.button_size_y, (3*self.button_size_x // 2) ), (self.button_size_x, self.button_size_y))
 
         if self.options:
             draw_text('Options', font, WHITE, screen, 20, 20)
 
-            self.button_1 = pygame.Rect(50, 100, 200, 50)
-            pygame.draw.rect(screen, (255, 0, 0), self.button_1)
-            draw_text('Option #1', font, BLACK, screen, 50, 100)
+            self.button_1 = make_button('Option #1', (self.button_size_y, self.button_size_x // 2 ), (self.button_size_x, self.button_size_y))
 
-            self.button_2 = pygame.Rect(50, 200, 200, 50)
-            pygame.draw.rect(screen, (255, 0, 0), self.button_2)
-            draw_text('Option #2', font, BLACK, screen, 50, 200)
+            self.button_2 = make_button('Option #2', (self.button_size_y, self.button_size_x ), (self.button_size_x, self.button_size_y))
 
-            self.button_3 = pygame.Rect(50, 300, 200, 50)
-            pygame.draw.rect(screen, (255, 0, 0), self.button_3)
-            draw_text('Back', font, BLACK, screen, 50, 300)
+            self.button_3 = make_button('Back', (self.button_size_y, (3*self.button_size_x // 2) ), (self.button_size_x, self.button_size_y))
 
     def check(self, events):
         mouse_x, mouse_y = pygame.mouse.get_pos(events)
