@@ -208,7 +208,8 @@ class Editor():
         self.boost_color = pygame.Surface((screen_size_x, screen_size_y))
         self.boost_color.set_alpha(100)
         self.stream = Stream()
-        self.time_for_Kozhevnikov_test = 250
+        self.angem = Angem()
+        self.time_for_Kozhevnikov_test = 700
 
     def user_events(self, events):
         '''
@@ -270,6 +271,7 @@ class Editor():
         self.timer.draw()
         self.hero.draw()
         self.stream.draw_button()
+        self.angem.draw_sweater()
 
     def check_bumping(self):
         '''
@@ -338,7 +340,7 @@ class Editor():
             if self.check_bumping():
                 self.done = 2
             self.stream.button_check(events)
-            if self.time % 500 == 0 and self.time != self.time_for_Kozhevnikov_test:
+            if self.time % 100 == 0 and self.time != self.time_for_Kozhevnikov_test:
                 self.test_is_on = True
                 self.Test = Ivanov_test()
             if self.time % 200 == 0:
@@ -361,161 +363,6 @@ class Editor():
             self.done = return_list[0]
             self.test_is_on = return_list[1]
         return self.done
-
-
-class Ivanov_test():
-    def __init__(self):
-        '''
-        Set test's parameters and thier meanings
-        '''
-        self.time = 0
-        self.length = min(screen_size[0] // 7, screen_size[1] // 7)
-        self.done = 0
-        self.time_is_over = False
-        self.time_limit = 15 * FPS
-        self.growing_time = 1 * FPS
-        self.x = screen_size[0] // 2
-        self.y = screen_size[1] // 4
-        self.task = []
-        self.length_of_answer_pic = self.length // 3
-        self.create_task()
-        self.number_of_task = 1
-        self.answer_list = []
-        self.score = 0
-
-    def progress(self, events):
-        '''
-        Manager function for all proccesses in test
-        '''
-        self.time += 1
-        self.draw()
-        self.user_events(events)
-        if self.time == self.time_limit:
-            self.time_is_over = True
-        return (self.done, not self.time_is_over)
-
-    def create_task(self):
-        '''
-        Make the new list with numbers for numers wich mean:
-        1 - for all
-        2 - exist
-        3 - equivalent (then and only then, when)
-        4 - epsilon
-        '''
-        self.task = []
-        for i in range(5):
-            self.task.append(randint(1, 4))
-
-    def draw(self):
-        '''
-        Draws all images and pictures in test
-        '''
-        time_scale = screen_size[0] / self.time_limit
-        rect(screen, RED, (0, 0, int(self.time * time_scale), 10))
-        if self.time <= self.growing_time:
-            insert_text("Dancing time!", "Game-font.ttf", GREEN, (screen_size[0] // 2, screen_size[1] // 2),
-                        self.time * self.time)
-        elif self.number_of_task <= 4:
-            rect(screen, BLACK,
-                 (self.x - self.length // 2 - 10, self.y - self.length // 2 - 10, self.length + 20, self.length + 20),
-                 5)
-            self.number = self.task[len(self.task) - 1]
-            if self.number == 1:
-                self.draw_for_all()
-            elif self.number == 2:
-                self.draw_exist()
-            elif self.number == 3:
-                self.draw_equivalent()
-            else:
-                self.draw_epsilon()
-            insert_picture('images/Hint.png', (4 * screen_size[0] // 5, screen_size[1] // 3),
-                           (screen_size[0] // 3, screen_size[1] // 4))
-            for i in range(4):
-                insert_text(str(i + 1) + ') ', "Game-font.ttf", BLACK,
-                            (screen_size[0] // 12, i * self.length_of_answer_pic + screen_size[1] // 5), 20)
-        elif self.number_of_task >= 5:
-            self.time = max(self.time, self.time_limit - (self.growing_time * 2))
-            if self.score == 0:
-                insert_picture('images/Falure.jpg', (screen_size[0] // 2, screen_size[1] // 2),
-                               (screen_size[0], screen_size[1]))
-                insert_text('You need to work harder', 'Game-font.ttf', WHITE,
-                            (screen_size[0] // 2, 3 * screen_size[1] // 4),
-                            min(screen_size[0] // 9, screen_size[1] // 9))
-            for i in range(4):
-                insert_text(str(i + 1) + ') ', "Game-font.ttf", BLACK,
-                            (screen_size[0] // 12, i * self.length_of_answer_pic + screen_size[1] // 5), 20)
-            if self.score > 0:
-                insert_text('Congrats! Your score: ' + str(self.score), "Game-font.ttf", RED,
-                            (screen_size_x // 2, screen_size_y // 2), 50)
-        self.draw_right_or_wrong_answer()
-        pygame.display.update()
-
-    def draw_right_or_wrong_answer(self):
-        '''
-        Putting pictures of green arrow for right answer or red X for wrong answer
-        '''
-        for i in range(self.number_of_task - 1):
-            if self.answer_list[i] == True:
-                insert_picture('images/right_ans.png', (
-                screen_size[0] // 12 + self.length_of_answer_pic, i * self.length_of_answer_pic + screen_size[1] // 5),
-                               (self.length_of_answer_pic, self.length_of_answer_pic))
-            else:
-                insert_picture('images/wrong.jpg', (
-                screen_size[0] // 12 + self.length_of_answer_pic, i * self.length_of_answer_pic + screen_size[1] // 5),
-                               (self.length_of_answer_pic, self.length_of_answer_pic))
-
-    def user_events(self, events):
-        '''
-        Analize events from keyboard, mouse, etc.
-        '''
-        for event in events:
-            self.done = quit_condition(event.type)
-            if (self.time >= self.growing_time) and (event.type == pygame.KEYUP):
-                if (event.key == pygame.K_d or event.key == pygame.K_RIGHT) and (self.number == 4):
-                    self.task.pop(len(self.task) - 1)
-                elif (event.key == pygame.K_a or event.key == pygame.K_LEFT) and (self.number == 3):
-                    self.task.pop(len(self.task) - 1)
-                elif (event.key == pygame.K_s or event.key == pygame.K_DOWN) and (self.number == 1):
-                    self.task.pop(len(self.task) - 1)
-                elif (event.key == pygame.K_w or event.key == pygame.K_UP) and (self.number == 2):
-                    self.task.pop(len(self.task) - 1)
-                else:
-                    self.answer_list.append(False)
-                    self.create_task()
-                    self.number_of_task += 1
-                if len(self.task) == 0:
-                    self.create_task()
-                    self.answer_list.append(True)
-                    self.number_of_task += 1
-                    self.score += 1
-
-    def draw_for_all(self):
-        line(screen, BLACK, (self.x - self.length // 2, self.y - self.length // 2), (self.x, self.y + self.length // 2),
-             5)
-        line(screen, BLACK, (self.x, self.y + self.length // 2), (self.x + self.length // 2, self.y - self.length // 2),
-             5)
-        line(screen, BLACK, (self.x - self.length // 4, self.y), (self.x + self.length // 4, self.y), 5)
-
-    def draw_exist(self):
-        for i in range(3):
-            line(screen, BLACK, (self.x - self.length // 4, self.y - self.length // 2 + (self.length // 2) * i),
-                 (self.x + self.length // 2, self.y - self.length // 2 + (self.length // 2) * i), 5)
-        line(screen, BLACK, (self.x + self.length // 2, self.y - self.length // 2),
-             (self.x + self.length // 2, self.y + self.length // 2), 5)
-
-    def draw_equivalent(self):
-        line(screen, BLACK, (self.x - self.length // 4, self.y - self.length // 8),
-             (self.x + self.length // 4, self.y - self.length // 8), 5)
-        line(screen, BLACK, (self.x - self.length // 4, self.y + self.length // 8),
-             (self.x + self.length // 4, self.y + self.length // 8), 5)
-        for i in range(-1, 3, 2):
-            line(screen, BLACK, (self.x - i * self.length // 2, self.y),
-                 (self.x - i * self.length // 13, self.y - self.length // 4 + 4), 5)
-            line(screen, BLACK, (self.x - i * self.length // 2, self.y),
-                 (self.x - i * self.length // 13, self.y + self.length // 4 - 4), 5)
-
-    def draw_epsilon(self):
-        insert_picture('images/epsilon.jpg', (self.x, self.y), (self.length, self.length))
 
 
 if __name__ == "__main__":
