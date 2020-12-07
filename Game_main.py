@@ -17,9 +17,11 @@ explanatories = []
 for i in range(3):
     explanatories.append(Explanatory(i + 1))
 
-edit_events = Editor(250, 6)
+gender = 1
+edit_events = Editor(gender, 250, 6)
 pause_menu = Pause(False, screen_size_x, screen_size_y)
 main_menu = Title(True, screen_size_x, screen_size_y)
+choose = Choosing()
 
 clock = pygame.time.Clock()
 done = False
@@ -34,21 +36,28 @@ while not done:
 
     keys = pygame.key.get_pressed()
 
-    if main_menu.title == True:
-        main_menu.render()
-        main_menu.check(pygame.event.get())
+    if choose.main == True:
+        choose.render()
+        choose.check(pygame.event.get())
+        edit_events.gender = choose.gender
     else:
-
-        if keys[pygame.K_ESCAPE] and (pause_menu.pause == False):
-            pause_menu.pause = True
-        if pause_menu.pause:
-            pause_menu.render()
-            pause_menu.check(pygame.event.get())
-
+        if main_menu.title == True:
+            main_menu.render()
+            main_menu.check(pygame.event.get())
         else:
-            done = edit_events.process(pygame.event.get())
+
+            if keys[pygame.K_ESCAPE] and (pause_menu.pause == False):
+                pause_menu.pause = True
+            if pause_menu.pause:
+                pause_menu.render()
+                pause_menu.check(pygame.event.get())
+
+            else:
+                done = edit_events.process(pygame.event.get())
+                print(edit_events.gender)
 
 if done == 2:
     show_game_over_table(done)
 
+print(edit_events.gender)
 pygame.quit()
