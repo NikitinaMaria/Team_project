@@ -29,7 +29,7 @@ male_model = pygame.image.load("male.png")
 female_model = pygame.image.load("female.png")
 
 class Hero():
-    def __init__(self, coord=None, gender = 1):
+    def __init__(self, gender, coord=None):
         '''
         Set ball's parameters and thier meanings
     def __init__(self, x, y, scale, gender, step, direction, vel, stand):
@@ -61,9 +61,10 @@ class Hero():
 
         if self.gender == 1:
             player_surface = pygame.transform.scale(male_model, (self.size_x, self.size_y))
+            print(self.gender)
         elif self.gender == 0:
             player_surface = pygame.transform.scale(female_model, (self.size_x, self.size_y))
-
+            print(self.gender)
         screen.blit(player_surface, (self.coord[0] - 38, -75 + self.coord[1]), (((self.size_x + 4) // 4)*(int(self.step) - 1), 5 + (self.size_y // 4)*self.direction, self.size_x / 4, self.size_y / 4))
 
         if self.step > 4.4:
