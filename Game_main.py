@@ -13,10 +13,6 @@ FPS = 15
 screen = pygame.display.set_mode((screen_size_x, screen_size_y))
 screen.fill(WHITE)
 
-explanatories = []
-for i in range(3):
-    explanatories.append(Explanatory(i + 1))
-
 gender = 1
 edit_events = Editor(gender, 250, 6)
 pause_menu = Pause(False, screen_size_x, screen_size_y)
