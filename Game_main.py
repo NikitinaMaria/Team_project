@@ -13,8 +13,10 @@ FPS = 15
 screen = pygame.display.set_mode((screen_size_x, screen_size_y))
 screen.fill(WHITE)
 
-gender = 1
-edit_events = Editor(gender, 250, 6)
+explanatories = []
+for i in range(3):
+    explanatories.append(Explanatory(i + 1))
+
 pause_menu = Pause(False, screen_size_x, screen_size_y)
 main_menu = Title(True, screen_size_x, screen_size_y)
 choose = Choosing()
@@ -35,7 +37,7 @@ while not done:
     if choose.main == True:
         choose.render()
         choose.check(pygame.event.get())
-        edit_events.gender = choose.gender
+        edit_events = Editor(choose.gender, 250, 6)
     else:
         if main_menu.title == True:
             main_menu.render()
