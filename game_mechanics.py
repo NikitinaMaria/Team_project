@@ -189,13 +189,13 @@ class Boost:
 
 
 class Editor():
-    def __init__(self, width_of_pictures, distance_between_roads):
+    def __init__(self, gender, width_of_pictures, distance_between_roads):
         """
         Set parameters and their meanings
         """
         self.done = 0
         self.step = (screen_size[0] - 2 * width_of_pictures - distance_between_roads * 2) // 3 + distance_between_roads
-        self.hero = Hero(coord=[screen_size[0] // 2, screen_size[1] - 20], gender=1)
+        self.hero = Hero(gender, coord=[screen_size[0] // 2, screen_size[1] - 20])
         self.time = 0
         self.width_of_pictures = width_of_pictures
         self.distance_between_roads = distance_between_roads
