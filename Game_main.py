@@ -52,5 +52,4 @@ while not done:
 if done == 2:
     show_game_over_table(done)
 
-print(edit_events.gender)
 pygame.quit()
