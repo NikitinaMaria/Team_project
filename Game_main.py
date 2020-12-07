@@ -52,7 +52,6 @@ while not done:
 
             else:
                 done = edit_events.process(pygame.event.get())
-                print(edit_events.gender)
 
 if done == 2:
     show_game_over_table(done)
