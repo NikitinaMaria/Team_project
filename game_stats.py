@@ -37,9 +37,21 @@ def draw_text(text, x, y, color, size):
     screen.blit(text, place)
 
 
+class Points:
+    def __init__(self):
+        self.coord_x = screen_size_x - 100
+        self.coord_y = 150
+        self.points = 0
+
+    def draw(self):
+        '''
+        The function draws user's points
+        '''
+        draw_text('Ваша оценка: ' + str(self.points), self.coord_x, self.coord_y, BLACK, 16)
+
+
 class Mood_scale:
-    def __init__(self, parent):
-        self.parent = parent
+    def __init__(self):
         self.mood_points = 1000
         self.mood_color = GREEN
         self.mood_750 = pygame.image.load('images/750.png')
@@ -69,8 +81,7 @@ class Mood_scale:
 
 
 class Boost_scale:
-    def __init__(self, parent):
-        self.parent = parent
+    def __init__(self):
         self.boost_points = 0
         self.boost_color = LIL
 
@@ -83,8 +94,7 @@ class Boost_scale:
 
 
 class Timer:
-    def __init__(self, parent):
-        self.parent = parent
+    def __init__(self):
         self.time = 1000
         self.alarm = pygame.image.load('images/alarm.png')
         self.alarm_r = pygame.image.load('images/alarm_r.png')
@@ -101,29 +111,30 @@ class Timer:
         screen.blit(self.scale, (screen_size_x - 50, 70))
         self.time -= 1
 
-class Explanatory:
-    def __init__(self, place):
-        self.place = place * 70
-        self.scroll = pygame.image.load('images/scroll.png')
-        self.scale = pygame.transform.scale(self.scroll, (70, 70))
 
-    def draw(self):
-        screen.blit(self.scale, (screen_size_x - self.place, 130))
-
-class Draw_stats():
+class Draw_stats:
     def __init__(self):
-        self.mood_scale = Mood_scale(self)
-        self.boost_scale = Boost_scale(self)
-        self.timer = Timer(self)
+        self.mood_scale = Mood_scale()
+        self.boost_scale = Boost_scale()
+        self.timer = Timer()
+        self.points = Points()
+
+    def draw_esc(self):
+        '''
+        The function draws esc hint
+        '''
+        draw_text('Для паузы нажмите ESC', screen_size_x - 120, screen_size_y - 20, BLACK, 16)
 
     def draw(self):
         self.mood_scale.draw()
         self.boost_scale.draw()
         self.timer.draw()
+        self.points.draw()
+        self.draw_esc()
         if self.mood_scale.mood_points <= 0:
-            done = True
+            done = 0
         else:
-            done = False
+            done = 2
         return done
 
 if __name__ == "__main__":

@@ -189,23 +189,20 @@ class Boost:
 
 
 class Editor():
-    def __init__(self, gender, width_of_pictures, distance_between_roads):
+    def __init__(self, width_of_pictures, distance_between_roads):
         """
         Set parameters and their meanings
         """
         self.done = 0
-        self.gender = gender
         self.step = (screen_size[0] - 2 * width_of_pictures - distance_between_roads * 2) // 3 + distance_between_roads
-        self.hero = Hero(gender, coord=[screen_size[0] // 2, screen_size[1] - 20])
+        self.hero = Hero(coord=[screen_size[0] // 2, screen_size[1] - 20], gender=1)
         self.time = 0
         self.width_of_pictures = width_of_pictures
         self.distance_between_roads = distance_between_roads
         self.obstacles = []
         self.boosts = []
         self.test_is_on = False
-        self.timer = Timer(self)
-        self.mood_scale = Mood_scale(self)
-        self.boost_scale = Boost_scale(self)
+        self.stats = Draw_stats()
         self.boost_color = pygame.Surface((screen_size_x, screen_size_y))
         self.boost_color.set_alpha(100)
         self.stream = Stream()
@@ -267,9 +264,7 @@ class Editor():
             obstacle.draw()
         for boost in self.boosts:
             boost.draw()
-        self.mood_scale.draw()
-        self.boost_scale.draw()
-        self.timer.draw()
+        self.stats.draw()
         self.hero.draw()
         self.stream.draw_button()
         self.analit.draw_sweater()
@@ -280,10 +275,10 @@ class Editor():
 		'''
         for obstacle in self.obstacles:
             if self.hero.coord[1] - 65 <= obstacle.coord[1] + obstacle.width:
-                if (self.hero.number_of_road == obstacle.number_of_road) and not (self.boost_scale.boost_points > 0):
+                if (self.hero.number_of_road == obstacle.number_of_road) and not (self.stats.boost_scale.boost_points > 0):
                     self.hero.was_kicked = True
                     return True
-                if (self.hero.number_of_road == obstacle.number_of_road) and (self.boost_scale.boost_points > 0):
+                if (self.hero.number_of_road == obstacle.number_of_road) and (self.stats.boost_scale.boost_points > 0):
                     ellipse(screen, BLACK, (self.hero.coord[0] + 50, self.hero.coord[1] - 110, 150, 70), 2)
                     ellipse(screen, WHITE, (self.hero.coord[0] + 50, self.hero.coord[1] - 110, 149, 69))
                     draw_text('Я не хочу спать!', self.hero.coord[0] + 125, self.hero.coord[1] - 75, BLACK, 16)
@@ -291,16 +286,18 @@ class Editor():
     def hero_boosting(self):
         """
         Looks if the hero caught the boost
-        :return:
         """
         for boost in self.boosts:
             if self.hero.coord[1] - 45 // 4 <= boost.coord[1] + boost.width:
                 if self.hero.number_of_road == boost.number_of_road:
                     boost.is_alive = False
-                    return True
+                    self.stats.boost_scale.boost_points = 100
+                    self.stats.mood_scale.mood_points += 200
+                    if self.stats.mood_scale.mood_points > 1000:
+                        self.stats.mood_scale.mood_points = 1000
 
     def boost_time(self):
-        if ((self.timer.time % 100 - self.timer.time % 10) // 10) % 2 == 0:
+        if ((self.stats.timer.time % 100 - self.stats.timer.time % 10) // 10) % 2 == 0:
             color = RED
         else:
             color = LIL
@@ -329,15 +326,9 @@ class Editor():
             self.draw()
             self.move_obstacle()
             self.move_boosts()
-            if self.hero_boosting():
-                self.boost_scale.boost_points = 100
-                self.mood_scale.mood_points += 200
-                if self.mood_scale.mood_points > 1000:
-                    self.mood_scale.mood_points = 1000
-            if self.boost_scale.boost_points > 0:
+            self.hero_boosting()
+            if self.stats.boost_scale.boost_points > 0:
                 self.boost_time()
-            if self.mood_scale.mood_points <= 0:
-                self.done = 1
             if self.check_bumping():
                 self.done = 2
             self.stream.button_check(events)
@@ -360,6 +351,7 @@ class Editor():
             self.stream.draw()
             self.stream.answer(events)
             self.done = self.stream.done
+            self.stats.points.points += self.stream.points
         elif self.analit.analit_is_on:
             self.analit.draw()
             self.analit.answer(events)
