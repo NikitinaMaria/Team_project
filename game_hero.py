@@ -61,10 +61,10 @@ class Hero():
 
         if self.gender == 1:
             player_surface = pygame.transform.scale(male_model, (self.size_x, self.size_y))
-            print(self.gender)
+            #print(self.gender)
         elif self.gender == 0:
             player_surface = pygame.transform.scale(female_model, (self.size_x, self.size_y))
-            print(self.gender)
+            #print(self.gender)
         screen.blit(player_surface, (self.coord[0] - 38, -75 + self.coord[1]), (((self.size_x + 4) // 4)*(int(self.step) - 1), 5 + (self.size_y // 4)*self.direction, self.size_x / 4, self.size_y / 4))
 
         if self.step > 4.4:
