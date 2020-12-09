@@ -7,8 +7,6 @@ from game_hero import *
 from game_stats import *
 from Game_events import *
 
-# from Game.game_hero import Hero
-
 pygame.init()
 
 screen_size_x = 1000
@@ -202,13 +200,13 @@ class Editor:
         self.distance_between_roads = distance_between_roads
         self.obstacles = []
         self.boosts = []
-        self.test_is_on = False
+        self.event_is_on = False
         self.stats = Draw_stats()
         self.boost_color = pygame.Surface((screen_size_x, screen_size_y))
         self.boost_color.set_alpha(100)
         self.stream = Stream()
         self.analit = Analit()
-        self.time_for_Kozhevnikov_test = 250
+        self.time_for_Kozhevnikov_test = 500
 
     def user_events(self, events):
         '''
@@ -217,7 +215,7 @@ class Editor:
         self.done = 0
         for event in events:
             self.done = quit_condition(event.type)
-            if not self.test_is_on:
+            if not self.event_is_on:
                 if event.type == pygame.KEYUP:
                     self.move_hero(event)
 
@@ -268,7 +266,7 @@ class Editor:
         self.stats.draw()
         self.hero.draw()
         self.stream.draw_button()
-        self.analit.draw_sweater()
+        draw_emergency_table(self)
 
     def check_bumping(self):
         '''
@@ -315,7 +313,7 @@ class Editor:
 		Manager function for all processes in program. It creates obstacles and control their movement, closes program because of pressed [X] button
 		starts drawing of all process, looks if the hero was kicked
 		'''
-        if (not self.test_is_on) and (not self.stream.stream_is_on) and (not self.analit.analit_is_on):
+        if not self.event_is_on:
             self.time += 1
             if self.time % 40 == 0:
                 self.obstacles.append(
@@ -329,39 +327,39 @@ class Editor:
             self.move_boosts()
             self.hero_boosting()
             if self.stats.boost_scale.boost_points > 0:
-                self.boost_time()
+            	self.boost_time()
             if self.check_bumping():
-                self.done = 2
-            self.stream.button_check(events)
-            self.analit.check_sweater(events)
-            if self.time % 500 == 0 and self.time != self.time_for_Kozhevnikov_test:
-                self.test_is_on = True
-                self.Test = Ivanov_test()
-            if self.time % 200 == 0:
-                self.stream.stream_is_available = True
-                self.stream.click_time = 100
-                self.stream.step = 1
-            if self.time >= self.time_for_Kozhevnikov_test - 50 and self.time <= self.time_for_Kozhevnikov_test and self.time % 6 != 0:
-                rect(screen, RED, (screen_size[0] - self.width_of_pictures, 2 * screen_size[1] // 3, 3 * self.width_of_pictures // 4, screen_size[1] // 8))
-                insert_text('Attention', 'Game-font.ttf', WHITE, (screen_size[0] - 6 * self.width_of_pictures // 10, 2 * screen_size[1] // 3 + screen_size[1] // 30), screen_size[1] // 30)
-                insert_text('Test is coming', 'Game-font.ttf', WHITE, (screen_size[0] - 6 * self.width_of_pictures // 10, 2 * screen_size[1] // 3 + screen_size[1] // 13), screen_size[1] // 37 )
-            if self.time == self.time_for_Kozhevnikov_test:
-                self.test_is_on = True
-                self.Test = Kozhevnikov_test()
-        elif self.stream.stream_is_on:
-            self.stream.draw()
-            self.stream.answer(events)
-            self.done = self.stream.done
-            self.stats.points.points += self.stream.points
-        elif self.analit.analit_is_on:
-            self.analit.draw()
-            self.analit.answer(events)
-            self.done = self.analit.done
-        elif self.test_is_on:
-            return_list = self.Test.progress(events)
+            	self.done = 2
+            select_event(self, events)
+        elif self.event_is_on:
+            return_list = self.Event.progress(events)
             self.done = return_list[0]
-            self.test_is_on = return_list[1]
+            self.event_is_on = return_list[1]
+            self.stats.points.points += return_list[2]
         return self.done
+
+def select_event(self, events):
+	if self.analit.pressed_or_not_button(events) and self.event_is_on == False:
+		self.event_is_on = True
+		self.Event = self.analit
+	if self.time % 500 == 0 and self.time != self.time_for_Kozhevnikov_test:
+		self.event_is_on = True
+		self.Event = Ivanov_test()
+	if self.time % 200 == 0:
+		self.stream.stream_is_available = True
+		self.stream.click_time = 100
+	if self.stream.pressed_or_not_button(events) and self.event_is_on == False:
+		self.event_is_on = True
+		self.Event = self.stream
+	if self.time == self.time_for_Kozhevnikov_test:
+		self.event_is_on = True
+		self.Event = Kozhevnikov_test()
+
+def draw_emergency_table(self):
+	if self.time >= self.time_for_Kozhevnikov_test - 50 and self.time <= self.time_for_Kozhevnikov_test and self.time % 6 != 0:
+	    rect(screen, RED, (screen_size[0] - self.width_of_pictures, 2 * screen_size[1] // 3, 3 * self.width_of_pictures // 4, screen_size[1] // 8))
+	    insert_text('Attention', 'Game-font.ttf', WHITE, (screen_size[0] - 6 * self.width_of_pictures // 10, 2 * screen_size[1] // 3 + screen_size[1] // 30), screen_size[1] // 30)
+	    insert_text('Test is coming', 'Game-font.ttf', WHITE, (screen_size[0] - 6 * self.width_of_pictures // 10, 2 * screen_size[1] // 3 + screen_size[1] // 13), screen_size[1] // 37 )
 
 
 if __name__ == "__main__":
