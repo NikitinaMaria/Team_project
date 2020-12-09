@@ -84,7 +84,7 @@ def show_game_over_table(done):
 	Shows "Game over" table after the hero was smashed by obstacle
 	'''
     screen.fill(GREEN)
-    insert_text("Game Over", "Game-font.ttf", WHITE, (screen_size[0] // 2, screen_size[1] // 2), 100)
+    insert_text("Game Over", "Fonts/Game-font.ttf", WHITE, (screen_size[0] // 2, screen_size[1] // 2), 100)
     pygame.display.update()
     while done != 1:
         for event in pygame.event.get():
@@ -358,8 +358,8 @@ def select_event(self, events):
 def draw_emergency_table(self):
 	if self.time >= self.time_for_Kozhevnikov_test - 50 and self.time <= self.time_for_Kozhevnikov_test and self.time % 6 != 0:
 	    rect(screen, RED, (screen_size[0] - self.width_of_pictures, 2 * screen_size[1] // 3, 3 * self.width_of_pictures // 4, screen_size[1] // 8))
-	    insert_text('Attention', 'Game-font.ttf', WHITE, (screen_size[0] - 6 * self.width_of_pictures // 10, 2 * screen_size[1] // 3 + screen_size[1] // 30), screen_size[1] // 30)
-	    insert_text('Test is coming', 'Game-font.ttf', WHITE, (screen_size[0] - 6 * self.width_of_pictures // 10, 2 * screen_size[1] // 3 + screen_size[1] // 13), screen_size[1] // 37 )
+	    insert_text('Attention', 'Fonts/Game-font.ttf', WHITE, (screen_size[0] - 6 * self.width_of_pictures // 10, 2 * screen_size[1] // 3 + screen_size[1] // 30), screen_size[1] // 30)
+	    insert_text('Test is coming', 'Fonts/Game-font.ttf', WHITE, (screen_size[0] - 6 * self.width_of_pictures // 10, 2 * screen_size[1] // 3 + screen_size[1] // 13), screen_size[1] // 37 )
 
 
 if __name__ == "__main__":
