@@ -82,6 +82,13 @@ class Stream:
                         (mouse_y < self.coord_y + self.width):
                     self.click_time = 0
                     self.stream_is_on = True
+                    return True
+            else:
+                return False
+
+    def pressed_or_not_button(self, events):
+        self.draw_button()
+        return self.button_check(events)
 
     def draw(self):
         '''
@@ -230,6 +237,19 @@ class Stream:
                         (mouse_y > 4 * screen_size_y // 9) and (mouse_y < 4 * screen_size_y // 9 + 70):
                     self.stream_is_on = False
                     self.points = 0
+    
+    def progress(self, events):
+        self.draw()
+        self.answer(events)
+        if self.stream_is_on == False:
+            self.step = 1
+            if self.points == 1:        
+                return (self.done, self.stream_is_on, self.points)
+            else:
+                return (self.done, self.stream_is_on, 0)
+            self.points = 0
+        else:
+            return (self.done, self.stream_is_on, 0)
 
 
 class Analit:
@@ -239,6 +259,7 @@ class Analit:
         self.sweater_is_available = True
         self.done = 0
         self.step = 1
+        self.points = 0
 
         # Images
         self.sweater = pygame.image.load('images/sweater.png')
@@ -303,6 +324,7 @@ class Analit:
                         (mouse_y < self.coord_y + self.width):
                     self.sweater_is_available = False
                     self.analit_is_on = True
+                    return True
 
     def draw(self):
         self.scale = pygame.transform.scale(self.start_page, (screen_size_x, screen_size_y))
@@ -326,6 +348,7 @@ class Analit:
             else:
                 self.step = 3
         if self.step == 2:
+            self.points = 1
             ellipse(screen, BLACK, (screen_size_x // 5, screen_size_y // 5 - 40, 402, 302), 3)
             ellipse(screen, WHITE, (screen_size_x // 5, screen_size_y // 5 - 40, 400, 300))
             draw_text('Поздравляю!', screen_size_x // 5 + 200, screen_size_y // 5 + 60, BLACK, 24)
@@ -347,7 +370,7 @@ class Analit:
                         screen.blit(self.bla_scale, (self.bla_x[i], self.bla_y[i]))
                 screen.blit(self.bla_bla_scale, (100, - self.bla_bla_time))
                 self.bla_bla_time += 2
-            elif (self.bla_bla_time >= 400) and (self.bla_bla_time < 470):
+            elif (self.bla_bla_time >= 400) and (self.bla_bla_time <= 471):
                 if self.bla_bla_time == 400:
                     pygame.mixer.music.load('audio/Later.mp3')
                     pygame.mixer.music.play()
@@ -356,6 +379,10 @@ class Analit:
                 self.bla_bla_time += 2
             else:
                 self.analit_is_on = False
+
+    def pressed_or_not_button(self, events):
+        self.draw_sweater()
+        return self.check_sweater(events)
 
     def answer(self, events):
         for event in events:
@@ -371,6 +398,21 @@ class Analit:
                 if (self.step == 2) and (mouse_x >= screen_size_x // 5) and (mouse_x <= screen_size_x // 5 + 400) \
                         and (mouse_y >= 4 * screen_size_y // 5) and (mouse_y <= 4 * screen_size_y // 5 + 100):
                     self.analit_is_on = False
+
+    def progress(self, events):
+        self.draw()
+        self.answer(events)
+        if self.analit_is_on == False:
+            self.step = 1
+            self.ask_time = 100
+            self.sweater_time = 200
+            if self.points == 1:        
+                return (self.done, self.analit_is_on, self.points)
+            else:
+                return (self.done, self.analit_is_on, 0)
+            self.points = 0
+        else:
+            return (self.done, self.analit_is_on, 0)
 
 
 class Ivanov_test():
@@ -425,14 +467,14 @@ class Ivanov_test():
         time_scale = screen_size[0] / self.time_limit
         rect(screen, RED, (0, 0, int(self.time * time_scale), 10))
         if self.time <= self.growing_time:
-            game_mechanics.insert_text("Dancing time!", "Game-font.ttf", GREEN,
+            game_mechanics.insert_text("Dancing time!", "Fonts/Game-font.ttf", GREEN,
                                        (screen_size[0] // 2, screen_size[1] // 2),
                                        self.time * self.time)
         else:
             if self.number_of_task <= 4 and self.time <= self.time_limit:
                 self.draw_task()
                 for i in range(4):
-                    game_mechanics.insert_text(str(i + 1) + ') ', "Game-font.ttf", BLACK,
+                    game_mechanics.insert_text(str(i + 1) + ') ', "Fonts/Game-font.ttf", BLACK,
                                                (screen_size[0] // 12,
                                                 i * self.length_of_answer_pic + screen_size[1] // 5), 20)
                 rect(screen, BLACK, (screen_size[0] // 2 - 5 * self.length_of_asterisk // 2 - 3,
@@ -445,15 +487,15 @@ class Ivanov_test():
                 if self.score == 4:
                     self.draw_max_score()
                 if self.score == 1 or self.score == 2:
-                    game_mechanics.insert_text('Not so bad', 'Game-font.ttf', BLACK,
+                    game_mechanics.insert_text('Not so bad', 'Fonts/Game-font.ttf', BLACK,
                                                (screen_size[0] // 2, 3 * screen_size[1] // 4),
                                                min(screen_size[0] // 9, screen_size[1] // 9))
                 if self.score == 3:
-                    game_mechanics.insert_text('Just great!', 'Game-font.ttf', GREEN,
+                    game_mechanics.insert_text('Just great!', 'Fonts/Game-font.ttf', GREEN,
                                                (screen_size[0] // 2, 3 * screen_size[1] // 4),
                                                min(screen_size[0] // 9, screen_size[1] // 8))
                 for i in range(4):
-                    game_mechanics.insert_text(str(i + 1) + ') ', "Game-font.ttf", WHITE,
+                    game_mechanics.insert_text(str(i + 1) + ') ', "Fonts/Game-font.ttf", WHITE,
                                                (screen_size[0] // 12,
                                                 i * self.length_of_answer_pic + screen_size[1] // 5), 20)
             self.draw_right_or_wrong_answer()
@@ -465,7 +507,7 @@ class Ivanov_test():
         '''
         game_mechanics.insert_picture('images/Falure.jpg', (screen_size[0] // 2, screen_size[1] // 2),
                                       (screen_size[0], screen_size[1]))
-        game_mechanics.insert_text('You need to work harder', 'Game-font.ttf', WHITE,
+        game_mechanics.insert_text('You need to work harder', 'Fonts/Game-font.ttf', WHITE,
                                    (screen_size[0] // 2, 3 * screen_size[1] // 4),
                                    min(screen_size[0] // 9, screen_size[1] // 9))
 
@@ -475,7 +517,7 @@ class Ivanov_test():
         '''
         game_mechanics.insert_picture('images/Happy_master.jpg', (screen_size[0] // 2, screen_size[1] // 2),
                                       (screen_size[0], screen_size[1]))
-        game_mechanics.insert_text('Master is proud of you', 'Game-font.ttf', GOLD,
+        game_mechanics.insert_text('Master is proud of you', 'Fonts/Game-font.ttf', GOLD,
                                    (screen_size[0] // 2, 2 * screen_size[1] // 3),
                                    min(screen_size[0] // 9, screen_size[1] // 9))
 
@@ -580,11 +622,6 @@ class Ivanov_test():
         game_mechanics.insert_picture('images/epsilon.jpg', (self.x, self.y), (self.length, self.length))
 
 
-# sets the logo an backstage music, but not activates it
-sound1 = pygame.mixer.Sound('audio/Hello_sound.ogg')
-pygame.mixer.music.load('audio/backstage.ogg')
-
-
 class Kozhevnikov_test():
     def __init__(self):
         '''
@@ -593,6 +630,9 @@ class Kozhevnikov_test():
         self.time = 0
         self.length = min(screen_size[0] // 7, screen_size[1] // 7)
         self.done = 0
+        # sets the logo an backstage music, but not activates it
+        self.sound_logo = pygame.mixer.Sound('audio/Hello_sound.ogg')
+        pygame.mixer.music.load('audio/backstage.ogg')
         self.time_is_over = False
         self.time_limit = 65 * FPS
         self.growing_time = 5 * FPS
@@ -618,7 +658,7 @@ class Kozhevnikov_test():
                 pygame.mixer.music.stop()
         else:
             if self.time == 0:
-                sound1.play()
+                self.sound_logo.play()
             if self.time == self.growing_time + 1:
                 pygame.mixer.music.play()
             if self.time <= self.growing_time:
@@ -634,7 +674,10 @@ class Kozhevnikov_test():
                 else:
                     self.draw_Kozhevnikov('images/Sad_Kozhevnikov.png', 'audio/wrong.ogg', 'Wrong answer!', RED)
         self.time += 1
-        return (self.done, not self.time_is_over)
+        if self.time_is_over:
+            return (self.done, not self.time_is_over, 4 * self.score // 5)
+        else:
+            return (self.done, not self.time_is_over, 0)
 
     def create_task(self):
         '''
@@ -655,7 +698,7 @@ class Kozhevnikov_test():
         Draws picture with the text on it, turns on and off backstage music, switches active question form to another
         '''
         game_mechanics.insert_picture(name, (screen_size[0] // 2, screen_size[1] // 2), screen_size)
-        game_mechanics.insert_text(text, 'Game-font.ttf', color, (screen_size[0] // 2, 7 * screen_size[1] // 8),
+        game_mechanics.insert_text(text, 'Fonts/Game-font.ttf', color, (screen_size[0] // 2, 7 * screen_size[1] // 8),
                                    min(screen_size[0] // 8, screen_size[1] // 8))
         if self.time == self.time_start + self.answer_music_time:
             sound2 = pygame.mixer.Sound(audio)
@@ -715,7 +758,7 @@ class Kozhevnikov_test():
         screen.fill(WHITE)
         game_mechanics.insert_picture('images/Answer_sheet' + str(self.number_of_answer) + '.png',
                                       (screen_size[0] // 2, screen_size[1] // 2), screen_size)
-        game_mechanics.insert_text('Вопрос ' + str(self.number_of_task), 'Kozhevnikov.ttf', WHITE,
+        game_mechanics.insert_text('Вопрос ' + str(self.number_of_task), 'Fonts/Kozhevnikov.ttf', WHITE,
                                    (5 * min(screen_size[1] // 20, screen_size[0] // 20),
                                     1 * screen_size[1] // 20), min(screen_size[1] // 15, screen_size[0] // 15))
         count = 0
@@ -729,11 +772,11 @@ class Kozhevnikov_test():
                 self.number_of_question = count + 1
                 count += -1
             if not inserted_text_of_question:
-                game_mechanics.insert_text(string, 'Kozhevnikov.ttf', WHITE,
+                game_mechanics.insert_text(string, 'Fonts/Kozhevnikov.ttf', WHITE,
                                            (screen_size[0] // 2, (4 + count) * screen_size[1] // 20),
                                            min(screen_size[1] // 15, screen_size[0] // 15))
             elif count >= 0 and string != 'r\n':
-                game_mechanics.insert_text(string[0: len(string) - 3], 'Kozhevnikov.ttf', WHITE, (
+                game_mechanics.insert_text(string[0: len(string) - 3], 'Fonts/Kozhevnikov.ttf', WHITE, (
                 35 * int(string[len(string) - 3:len(string) - 1]) / 100 * min(screen_size[1] // 25,
                                                                               screen_size[0] // 25),
                 (44 + 10 * count) * screen_size[1] // 80), min(screen_size[1] // 15, screen_size[0] // 15))
@@ -749,17 +792,17 @@ class Kozhevnikov_test():
         if self.score == 5:
             self.draw_max_score()
         if self.score == 3 or self.score == 2:
-            game_mechanics.insert_text('Not so bad', 'Game-font.ttf', BLACK,
+            game_mechanics.insert_text('Not so bad', 'Fonts/Game-font.ttf', BLACK,
                                        (screen_size[0] // 2, 3 * screen_size[1] // 4),
                                        min(screen_size[0] // 9, screen_size[1] // 9))
-            game_mechanics.insert_text(str(self.score), 'Game-font.ttf', BLACK,
+            game_mechanics.insert_text(str(self.score), 'Fonts/Game-font.ttf', BLACK,
                                        (screen_size[0] // 2, screen_size[1] // 2),
                                        min(screen_size[0] // 5, screen_size[1] // 5))
         if self.score == 4:
-            game_mechanics.insert_text('Just great!', 'Game-font.ttf', GREEN,
+            game_mechanics.insert_text('Just great!', 'Fonts/Game-font.ttf', GREEN,
                                        (screen_size[0] // 2, 3 * screen_size[1] // 4),
                                        min(screen_size[0] // 5, screen_size[1] // 5))
-            game_mechanics.insert_text(str(self.score), 'Game-font.ttf', GREEN,
+            game_mechanics.insert_text(str(self.score), 'Fonts/Game-font.ttf', GREEN,
                                        (screen_size[0] // 2, screen_size[1] // 2),
                                        min(screen_size[0] // 5, screen_size[1] // 5))
         pygame.display.update()
@@ -770,7 +813,7 @@ class Kozhevnikov_test():
         '''
         game_mechanics.insert_picture('images/Falure.jpg', (screen_size[0] // 2, screen_size[1] // 2),
                                       (screen_size[0], screen_size[1]))
-        game_mechanics.insert_text('You need to work harder', 'Game-font.ttf', WHITE,
+        game_mechanics.insert_text('You need to work harder', 'Fonts/Game-font.ttf', WHITE,
                                    (screen_size[0] // 2, 3 * screen_size[1] // 4),
                                    min(screen_size[0] // 9, screen_size[1] // 9))
 
@@ -780,7 +823,7 @@ class Kozhevnikov_test():
         '''
         game_mechanics.insert_picture('images/Master_of_the_world.jpg', (screen_size[0] // 2, screen_size[1] // 2),
                                       (screen_size[0], screen_size[1]))
-        game_mechanics.insert_text('Master is proud of you', 'Game-font.ttf', GOLD,
+        game_mechanics.insert_text('Master is proud of you', 'Fonts/Game-font.ttf', GOLD,
                                    (screen_size[0] // 2, 2 * screen_size[1] // 3),
                                    min(screen_size[0] // 9, screen_size[1] // 9))
 
