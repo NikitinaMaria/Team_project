@@ -29,6 +29,7 @@ DARK_GREEN = (0, 128, 0)
 GREY = (128, 128, 128)
 BLACKBOARD = (65, 86, 71)
 BLACKBOARD_3 = (81, 78, 36)
+BlOOD = (153, 0, 0)
 
 
 def insert_picture(name, position, size):
@@ -65,6 +66,7 @@ def draw_road(width_of_pictures, distance_between_roads):
     """"
     The function draws road
     """
+    screen.fill(WHITE)
     width_of_road = screen_size_x - 2 * width_of_pictures
     polygon(screen, GREY, ((width_of_pictures, screen_size_y),
                            (screen_size_x - width_of_pictures, screen_size_y),
@@ -256,17 +258,35 @@ class Editor:
 
     def draw(self):
         '''
-		Turns on all object's drawings processes
-		'''
-        draw_road(self.width_of_pictures, self.distance_between_roads)
-        for obstacle in self.obstacles:
-            obstacle.draw()
-        for boost in self.boosts:
-            boost.draw()
-        self.stats.draw()
-        self.hero.draw()
-        self.stream.draw_button()
-        draw_emergency_table(self)
+        Turns on all object's drawings processes
+        '''
+        screen.fill(BLACK)
+        if self.time <= 3 * FPS // 2:
+        	insert_picture('images/DGAP-MIPT.png', (screen_size[0] // 2, screen_size[1] // 2), screen_size)
+        elif self.time <= 3 * FPS and self.time > 3 * FPS // 2:
+            insert_text('Presents', 'Fonts/Presents.ttf', WHITE, (screen_size[0] // 2, screen_size[1] // 2), min(screen_size[0] // 3, screen_size[1] // 3))
+        elif self.time <= 9 * FPS // 2 and self.time > 3 * FPS:
+        	insert_picture('images/DGAP-cat.jpg', (  screen_size[0] // 2, screen_size[1] // 2), ( self.time * 7,  self.time * 7))
+        elif self.time <= 6 * FPS and self.time > 9 * FPS // 2:
+            insert_text('Сессия близко', 'Fonts/Session.otf', BlOOD, (screen_size[0] // 2, screen_size[1] // 2), min(screen_size[0] // 3, screen_size[1] // 3))
+        elif self.time <= 9 * FPS and self.time > 6 * FPS:
+            insert_text('С благодарностью за то, что они есть', 'Fonts/Kozhevnikov.ttf', WHITE, (screen_size[0] // 2, screen_size[1] // 20), min(screen_size[0] // 10, screen_size[1] // 10))
+            for i in range(1, 4, 1):
+                if self.time >= (5 + i) * FPS + 1:
+                    insert_picture('images/Thank_you_' + str(i)+ '.jpg', (i * screen_size[0] // 4, screen_size[1] // 2), (screen_size[0] // 2, 4 * screen_size[1] // 5))
+        elif self.time > 9 * FPS and self.time <= 12 * FPS:
+        	insert_picture('images/Disclaimer.jpg', (screen_size[0] // 2, screen_size[1] // 2), screen_size)            
+        else:
+            draw_road(self.width_of_pictures, self.distance_between_roads)
+            for obstacle in self.obstacles:
+                obstacle.draw()
+            for boost in self.boosts:
+                boost.draw()
+            self.stats.draw()
+            self.hero.draw()
+            self.stream.draw_button()
+            draw_emergency_table(self)
+            self.analit.draw_sweater()
 
     def check_bumping(self):
         '''
@@ -301,6 +321,7 @@ class Editor:
         else:
             color = LIL
         self.boost_color.fill(color)
+
         screen.blit(self.boost_color, (0, 0))
         circle_sur = pygame.Surface((screen_size_x, screen_size_y))
         circle(circle_sur, BLUE, self.hero.coord, 85)
@@ -315,22 +336,22 @@ class Editor:
 		'''
         if not self.event_is_on:
             self.time += 1
-            if self.time % 40 == 0:
-                self.obstacles.append(
-                    Obstacle(10, randint(1, 3), 50, self.width_of_pictures, self.distance_between_roads))
-            if self.time % 67 == 0:
-                self.boosts.append(Boost(10, randint(1, 3), 70, self.width_of_pictures, self.distance_between_roads))
-            self.done = 0
-            self.user_events(events)
             self.draw()
-            self.move_obstacle()
-            self.move_boosts()
-            self.hero_boosting()
-            if self.stats.boost_scale.boost_points > 0:
-            	self.boost_time()
-            if self.check_bumping():
-            	self.done = 2
-            select_event(self, events)
+            if self.time > 12 * FPS:
+                if self.time % 40 == 0:
+                    self.obstacles.append(Obstacle(10, randint(1, 3), 50, self.width_of_pictures, self.distance_between_roads))
+                if self.time % 67 == 0:
+                    self.boosts.append(Boost(10, randint(1, 3), 70, self.width_of_pictures, self.distance_between_roads))
+                self.done = 0
+                self.user_events(events)
+                self.move_obstacle()
+                self.move_boosts()
+                self.hero_boosting()
+                if self.stats.boost_scale.boost_points > 0:
+                	self.boost_time()
+                if self.check_bumping():
+                	self.done = 2
+                select_event(self, events)
         elif self.event_is_on:
             return_list = self.Event.progress(events)
             self.done = return_list[0]

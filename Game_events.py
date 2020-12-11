@@ -381,7 +381,7 @@ class Analit:
                 self.analit_is_on = False
 
     def pressed_or_not_button(self, events):
-        self.draw_sweater()
+        #self.draw_sweater()
         return self.check_sweater(events)
 
     def answer(self, events):
@@ -683,7 +683,7 @@ class Kozhevnikov_test():
         '''
         Reads task from text file, puts it in list according to the number of question
         '''
-        with open('text.txt', encoding='utf-8') as file:
+        with open('Text_files/text.txt', encoding='utf-8') as file:
             array = []
             for line in file:
                 if line == 'fff\n':
