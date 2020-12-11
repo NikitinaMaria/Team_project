@@ -273,8 +273,8 @@ class Editor:
             insert_text('С благодарностью за то, что они есть', 'Fonts/Kozhevnikov.ttf', WHITE, (screen_size[0] // 2, screen_size[1] // 20), min(screen_size[0] // 10, screen_size[1] // 10))
             for i in range(1, 4, 1):
                 if self.time >= (5 + i) * FPS + 1:
-                    insert_picture('images/Thank_you_' + str(i)+ '.jpg', (i * screen_size[0] // 4, screen_size[1] // 2), (screen_size[0] // 2, 4 * screen_size[1] // 5))
-        elif self.time > 9 * FPS and self.time <= 12 * FPS:
+                    insert_picture('images/Thank_you_' + str(i)+ '.jpg', (i * screen_size[0] // 4, 23 * screen_size[1] // 40), (screen_size[0] // 2, 73 * screen_size[1] // 80))
+        elif self.time > 9 * FPS and self.time <= 15 * FPS:
         	insert_picture('images/Disclaimer.jpg', (screen_size[0] // 2, screen_size[1] // 2), screen_size)            
         else:
             draw_road(self.width_of_pictures, self.distance_between_roads)
@@ -337,13 +337,12 @@ class Editor:
         if not self.event_is_on:
             self.time += 1
             self.draw()
-            if self.time > 12 * FPS:
+            self.user_events(events)
+            if self.time > 15 * FPS:
                 if self.time % 40 == 0:
                     self.obstacles.append(Obstacle(10, randint(1, 3), 50, self.width_of_pictures, self.distance_between_roads))
                 if self.time % 67 == 0:
                     self.boosts.append(Boost(10, randint(1, 3), 70, self.width_of_pictures, self.distance_between_roads))
-                self.done = 0
-                self.user_events(events)
                 self.move_obstacle()
                 self.move_boosts()
                 self.hero_boosting()

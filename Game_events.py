@@ -446,7 +446,10 @@ class Ivanov_test():
         self.user_events(events)
         if self.time == self.time_limit + 3 * self.growing_time:
             self.time_is_over = True
-        return (self.done, not self.time_is_over)
+        if self.time_is_over:
+            return (self.done, not self.time_is_over, self.score)
+        else:
+            return (self.done, not self.time_is_over, 0)
 
     def create_task(self):
         '''
