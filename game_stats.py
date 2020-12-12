@@ -52,7 +52,7 @@ class Points:
 
 class Mood_scale:
     def __init__(self):
-        self.mood_points = 1000
+        self.mood_points = 400
         self.mood_color = GREEN
         self.mood_750 = pygame.image.load('images/750.png')
         self.mood_500 = pygame.image.load('images/500.png')
@@ -62,20 +62,20 @@ class Mood_scale:
 
     def draw(self):
         draw_text('Настроение:', screen_size_x - 100, 20, BLACK, 16)
-        if self.mood_points >= 750:
+        if self.mood_points >= 300:
             self.mood_color = GREEN
             self.scale = pygame.transform.scale(self.mood_750, (50, 50))
-        elif self.mood_points >=500:
+        elif self.mood_points >= 200:
             self.mood_color = YELLOW
             self.scale = pygame.transform.scale(self.mood_500, (50, 50))
-        elif self.mood_points >= 250:
+        elif self.mood_points >= 100:
             self.mood_color = ORANGE
             self.scale = pygame.transform.scale(self.mood_250, (50, 50))
         else:
             self.mood_color = RED
             self.scale = pygame.transform.scale(self.mood_0, (50, 50))
         self.mood_points -= 1
-        rect(screen, self.mood_color, (screen_size_x - self.mood_points // 5 - 50, 35, self.mood_points // 5, 15))
+        rect(screen, self.mood_color, (screen_size_x - self.mood_points // 2 - 50, 35, self.mood_points // 2, 15))
         rect(screen, BLACK, (screen_size_x - 250, 35, 200, 15), 2)
         screen.blit(self.scale, (screen_size_x - 50, 20))
 
@@ -132,9 +132,11 @@ class Draw_stats:
         self.points.draw()
         self.draw_esc()
         if self.mood_scale.mood_points <= 0:
-            done = 0
+            done = 3
         else:
-            done = 2
+            done = 0
+        if self.timer.time <=0:
+            done = 4
         return done
 
 if __name__ == "__main__":

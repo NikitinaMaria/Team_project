@@ -7,6 +7,8 @@ from game_mechanics import *
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
 GOLD = (238, 201, 0)
 BLACKBOARD = (65, 86, 71)
 BLACKBOARD_3 = (81, 78, 36)
@@ -20,6 +22,16 @@ def quit_condition(pressed_button):
     if pressed_button == pygame.QUIT:
         final = 1
     return final
+
+
+def insert_text(string, font, color, position, size):
+    '''
+    Paste text according to the position of its center
+    '''
+    text_style = pygame.font.Font(font, size)
+    surface = text_style.render(string, True, color)
+    textRect = surface.get_rect(center=position)
+    screen.blit(surface, textRect)
 
 
 class Stream:
@@ -123,7 +135,7 @@ class Stream:
 
             # The question of the teacher
             draw_text('Хорошо.', screen_size_x // 3 + 25, screen_size_y // 7, WHITE, 28)
-            draw_text('Давайте ваш вопрос.', screen_size_x // 3 + 25, screen_size_y // 7 + 30, WHITE, 28)
+            draw_text('Давайте Ваш вопрос.', screen_size_x // 3 + 25, screen_size_y // 7 + 30, WHITE, 28)
 
             # Answers
             for i in range(6):
@@ -830,6 +842,78 @@ class Kozhevnikov_test():
                                    (screen_size[0] // 2, 2 * screen_size[1] // 3),
                                    min(screen_size[0] // 9, screen_size[1] // 9))
 
+
+class Endings:
+    def __init__(self, number, final_points):
+        self.number = number
+        self.final_points = final_points
+        self.fox = pygame.image.load('images/fox.png')
+        self.fail = pygame.image.load('images/fail.jpg')
+        self.sleep = pygame.image.load('images/sleep.jpg')
+        self.matrix = pygame.image.load('images/matrix.jpg')
+        self.left_cloud = pygame.image.load('images/left_cloud.png')
+        self.right_cloud = pygame.image.load('images/right_cloud.png')
+
+    def quit_or_not(self):
+        while self.number != 1:
+            for event in pygame.event.get():
+                self.number = quit_condition(event.type)
+
+    def end_2(self):
+        screen.fill(WHITE)
+        self.scale = self.scale = pygame.transform.scale(self.fail, (screen_size_x // 5, screen_size_y // 4))
+        screen.blit(self.scale, (0, 0))
+        draw_text('Притяжение к кровати оказалось сильнее Вас...', screen_size_x // 2,
+                  screen_size_y // 2 - 90, BLACK, 24)
+        self.scale = self.scale = pygame.transform.scale(self.sleep, (screen_size_x // 4, screen_size_y //3))
+        screen.blit(self.scale, (screen_size_x // 2 - screen_size_x // 10, screen_size_y // 2))
+        pygame.display.update()
+        self.quit_or_not()
+
+    def end_3(self):
+        screen.fill(WHITE)
+        self.scale = self.scale = pygame.transform.scale(self.fail, (screen_size_x // 5, screen_size_y // 4))
+        screen.blit(self.scale, (0, 0))
+        draw_text('Вы настолько увлеклись подготовкой к экзаменам,', screen_size_x // 2,
+                  screen_size_y // 2 - 150, BLACK, 24)
+        draw_text('что забыли про реальную жизнь.', screen_size_x // 2,
+                  screen_size_y // 2 - 120, BLACK, 24)
+        draw_text('Дни превратились в одну сплошную учёбу без каких-либо радостей,', screen_size_x // 2,
+                  screen_size_y // 2 - 90, BLACK, 24)
+        draw_text('и в какой-то момент Ваше настроение скатилось к нулю.', screen_size_x // 2,
+                  screen_size_y // 2 - 60, BLACK, 24)
+        draw_text('Уныние погубило Вас...', screen_size_x // 2,
+                  screen_size_y // 2 - 30, BLACK, 24)
+        self.scale = self.scale = pygame.transform.scale(self.fox, (screen_size_x // 5, screen_size_y // 3))
+        screen.blit(self.scale, (screen_size_x // 2 - screen_size_x // 10, screen_size_y // 2))
+        pygame.display.update()
+        self.quit_or_not()
+
+    def end_4(self):
+        if self.final_points <= 2:
+            screen.fill(WHITE)
+            self.scale = self.scale = pygame.transform.scale(self.matrix, (screen_size_x, screen_size_y))
+            screen.blit(self.scale, (0, 0))
+            rect(screen, BLACK, (screen_size_x // 5, 0, 3 * screen_size_x // 5, 75), 3)
+            rect(screen, WHITE, (screen_size_x // 5, 0, 3 * screen_size_x // 5, 75))
+            draw_text('Ваши баллы слишком малы.', screen_size_x // 2, 25, BLACK, 24)
+            draw_text('У меня есть для Вас два варианта.', screen_size_x // 2, 50, BLACK, 24)
+            self.scale = pygame.transform.scale(self.left_cloud, (screen_size_x // 3, screen_size_y // 3))
+            screen.blit(self.scale, (0, screen_size_y // 2))
+            draw_text('Академ', screen_size_x // 6, 2 * screen_size_y // 3 - 20, RED, 30)
+            self.scale = pygame.transform.scale(self.right_cloud, (screen_size_x // 3, screen_size_y // 3))
+            screen.blit(self.scale, (2 * screen_size_x // 3, screen_size_y // 2))
+            draw_text('Академ', 5 * screen_size_x // 6, 2 * screen_size_y // 3 - 20, BLUE, 30)
+            pygame.display.update()
+            self.quit_or_not()
+
+    def end(self):
+        if self.number == 2:
+            self.end_2()
+        elif self.number == 3:
+            self.end_3()
+        elif self.number == 4:
+            self.end_4()
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

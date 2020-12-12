@@ -42,16 +42,6 @@ def insert_picture(name, position, size):
     screen.blit(surf, rect)
 
 
-def insert_text(string, font, color, position, size):
-    '''
-    Paste text according to the position of its center
-    '''
-    text_style = pygame.font.Font(font, size)
-    surface = text_style.render(string, True, color)
-    textRect = surface.get_rect(center=position)
-    screen.blit(surface, textRect)
-
-
 def quit_condition(pressed_button):
     """
 	Checks if [X] button was pressed
@@ -81,18 +71,6 @@ def draw_road(width_of_pictures, distance_between_roads):
          distance_between_roads)
 
 
-def show_game_over_table(done):
-    '''
-	Shows "Game over" table after the hero was smashed by obstacle
-	'''
-    screen.fill(GREEN)
-    insert_text("Game Over", "Fonts/Game-font.ttf", WHITE, (screen_size[0] // 2, screen_size[1] // 2), 100)
-    pygame.display.update()
-    while done != 1:
-        for event in pygame.event.get():
-            done = quit_condition(event.type)
-
-
 class Obstacle:
     def __init__(self, speed, number_of_road, width, width_of_pictures, distance_between_roads):
         self.is_alive = True
@@ -107,7 +85,7 @@ class Obstacle:
         self.width_of_pictures = width_of_pictures
         self.distance_between_roads = distance_between_roads
         self.coord = [width_of_pictures + self.width_of_all_road // 4 + (number_of_road - 1) * (
-                    self.width_of_road // 2 + self.distance_between_roads // 2), 0]
+                self.width_of_road // 2 + self.distance_between_roads // 2), 0]
         self.length = self.width_of_road // 2
         self.width = width
         self.number_of_road = number_of_road
@@ -262,27 +240,34 @@ class Editor:
         '''
         screen.fill(BLACK)
         if self.time <= 3 * FPS // 2:
-        	insert_picture('images/DGAP-MIPT.png', (screen_size[0] // 2, screen_size[1] // 2), screen_size)
+            insert_picture('images/DGAP-MIPT.png', (screen_size[0] // 2, screen_size[1] // 2), screen_size)
         elif self.time <= 3 * FPS and self.time > 3 * FPS // 2:
-            insert_text('Presents', 'Fonts/Presents.ttf', WHITE, (screen_size[0] // 2, screen_size[1] // 2), min(screen_size[0] // 3, screen_size[1] // 3))
+            insert_text('Presents', 'Fonts/Presents.ttf', WHITE, (screen_size[0] // 2, screen_size[1] // 2),
+                        min(screen_size[0] // 3, screen_size[1] // 3))
         elif self.time <= 9 * FPS // 2 and self.time > 3 * FPS:
-        	insert_picture('images/DGAP-cat.jpg', (  screen_size[0] // 2, screen_size[1] // 2), ( self.time * 7,  self.time * 7))
+            insert_picture('images/DGAP-cat.jpg', (screen_size[0] // 2, screen_size[1] // 2),
+                           (self.time * 7, self.time * 7))
         elif self.time <= 6 * FPS and self.time > 9 * FPS // 2:
-            insert_text('Сессия близко', 'Fonts/Session.otf', BlOOD, (screen_size[0] // 2, screen_size[1] // 2), min(screen_size[0] // 3, screen_size[1] // 3))
+            insert_text('Сессия близко', 'Fonts/Session.otf', BlOOD, (screen_size[0] // 2, screen_size[1] // 2),
+                        min(screen_size[0] // 3, screen_size[1] // 3))
         elif self.time <= 9 * FPS and self.time > 6 * FPS:
-            insert_text('С благодарностью за то, что они есть', 'Fonts/Kozhevnikov.ttf', WHITE, (screen_size[0] // 2, screen_size[1] // 20), min(screen_size[0] // 10, screen_size[1] // 10))
+            insert_text('С благодарностью за то, что они есть', 'Fonts/Kozhevnikov.ttf', WHITE,
+                        (screen_size[0] // 2, screen_size[1] // 20), min(screen_size[0] // 10, screen_size[1] // 10))
             for i in range(1, 4, 1):
                 if self.time >= (5 + i) * FPS + 1:
-                    insert_picture('images/Thank_you_' + str(i)+ '.jpg', (i * screen_size[0] // 4, 23 * screen_size[1] // 40), (screen_size[0] // 2, 73 * screen_size[1] // 80))
+                    insert_picture('images/Thank_you_' + str(i) + '.jpg',
+                                   (i * screen_size[0] // 4, 23 * screen_size[1] // 40),
+                                   (screen_size[0] // 2, 73 * screen_size[1] // 80))
         elif self.time > 9 * FPS and self.time <= 15 * FPS:
-        	insert_picture('images/Disclaimer.jpg', (screen_size[0] // 2, screen_size[1] // 2), screen_size)            
+            insert_picture('images/Disclaimer.jpg', (screen_size[0] // 2, screen_size[1] // 2), screen_size)
         else:
             draw_road(self.width_of_pictures, self.distance_between_roads)
             for obstacle in self.obstacles:
                 obstacle.draw()
             for boost in self.boosts:
                 boost.draw()
-            self.stats.draw()
+            if self.done != 1:
+                self.done = self.stats.draw()
             self.hero.draw()
             self.stream.draw_button()
             draw_emergency_table(self)
@@ -294,7 +279,8 @@ class Editor:
 		'''
         for obstacle in self.obstacles:
             if self.hero.coord[1] - 65 <= obstacle.coord[1] + obstacle.width:
-                if (self.hero.number_of_road == obstacle.number_of_road) and not (self.stats.boost_scale.boost_points > 0):
+                if (self.hero.number_of_road == obstacle.number_of_road) and not (
+                        self.stats.boost_scale.boost_points > 0):
                     self.hero.was_kicked = True
                     return True
                 if (self.hero.number_of_road == obstacle.number_of_road) and (self.stats.boost_scale.boost_points > 0):
@@ -312,8 +298,8 @@ class Editor:
                     boost.is_alive = False
                     self.stats.boost_scale.boost_points = 100
                     self.stats.mood_scale.mood_points += 200
-                    if self.stats.mood_scale.mood_points > 1000:
-                        self.stats.mood_scale.mood_points = 1000
+                    if self.stats.mood_scale.mood_points > 400:
+                        self.stats.mood_scale.mood_points = 400
 
     def boost_time(self):
         if ((self.stats.timer.time % 100 - self.stats.timer.time % 10) // 10) % 2 == 0:
@@ -336,20 +322,22 @@ class Editor:
 		'''
         if not self.event_is_on:
             self.time += 1
-            self.draw()
             self.user_events(events)
+            self.draw()
             if self.time > 15 * FPS:
                 if self.time % 40 == 0:
-                    self.obstacles.append(Obstacle(10, randint(1, 3), 50, self.width_of_pictures, self.distance_between_roads))
+                    self.obstacles.append(
+                        Obstacle(10, randint(1, 3), 50, self.width_of_pictures, self.distance_between_roads))
                 if self.time % 67 == 0:
-                    self.boosts.append(Boost(10, randint(1, 3), 70, self.width_of_pictures, self.distance_between_roads))
+                    self.boosts.append(
+                        Boost(10, randint(1, 3), 70, self.width_of_pictures, self.distance_between_roads))
                 self.move_obstacle()
                 self.move_boosts()
                 self.hero_boosting()
                 if self.stats.boost_scale.boost_points > 0:
-                	self.boost_time()
+                    self.boost_time()
                 if self.check_bumping():
-                	self.done = 2
+                    self.done = 2
                 select_event(self, events)
         elif self.event_is_on:
             return_list = self.Event.progress(events)
@@ -358,28 +346,36 @@ class Editor:
             self.stats.points.points += return_list[2]
         return self.done
 
+
 def select_event(self, events):
-	if self.analit.pressed_or_not_button(events) and self.event_is_on == False:
-		self.event_is_on = True
-		self.Event = self.analit
-	if self.time % 500 == 0 and self.time != self.time_for_Kozhevnikov_test:
-		self.event_is_on = True
-		self.Event = Ivanov_test()
-	if self.time % 200 == 0:
-		self.stream.stream_is_available = True
-		self.stream.click_time = 100
-	if self.stream.pressed_or_not_button(events) and self.event_is_on == False:
-		self.event_is_on = True
-		self.Event = self.stream
-	if self.time == self.time_for_Kozhevnikov_test:
-		self.event_is_on = True
-		self.Event = Kozhevnikov_test()
+    if self.analit.pressed_or_not_button(events) and self.event_is_on == False:
+        self.event_is_on = True
+        self.Event = self.analit
+    if self.time % 500 == 0 and self.time != self.time_for_Kozhevnikov_test:
+        self.event_is_on = True
+        self.Event = Ivanov_test()
+    if self.time % 200 == 0:
+        self.stream.stream_is_available = True
+        self.stream.click_time = 100
+    if self.stream.pressed_or_not_button(events) and self.event_is_on == False:
+        self.event_is_on = True
+        self.Event = self.stream
+    if self.time == self.time_for_Kozhevnikov_test:
+        self.event_is_on = True
+        self.Event = Kozhevnikov_test()
+
 
 def draw_emergency_table(self):
-	if self.time >= self.time_for_Kozhevnikov_test - 50 and self.time <= self.time_for_Kozhevnikov_test and self.time % 6 != 0:
-	    rect(screen, RED, (screen_size[0] - self.width_of_pictures, 2 * screen_size[1] // 3, 3 * self.width_of_pictures // 4, screen_size[1] // 8))
-	    insert_text('Attention', 'Fonts/Game-font.ttf', WHITE, (screen_size[0] - 6 * self.width_of_pictures // 10, 2 * screen_size[1] // 3 + screen_size[1] // 30), screen_size[1] // 30)
-	    insert_text('Test is coming', 'Fonts/Game-font.ttf', WHITE, (screen_size[0] - 6 * self.width_of_pictures // 10, 2 * screen_size[1] // 3 + screen_size[1] // 13), screen_size[1] // 37 )
+    if self.time >= self.time_for_Kozhevnikov_test - 50 and self.time <= self.time_for_Kozhevnikov_test and self.time % 6 != 0:
+        rect(screen, RED, (
+        screen_size[0] - self.width_of_pictures, 2 * screen_size[1] // 3, 3 * self.width_of_pictures // 4,
+        screen_size[1] // 8))
+        insert_text('Attention', 'Fonts/Game-font.ttf', WHITE,
+                    (screen_size[0] - 6 * self.width_of_pictures // 10, 2 * screen_size[1] // 3 + screen_size[1] // 30),
+                    screen_size[1] // 30)
+        insert_text('Test is coming', 'Fonts/Game-font.ttf', WHITE,
+                    (screen_size[0] - 6 * self.width_of_pictures // 10, 2 * screen_size[1] // 3 + screen_size[1] // 13),
+                    screen_size[1] // 37)
 
 
 if __name__ == "__main__":

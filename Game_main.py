@@ -20,8 +20,6 @@ choose = Choosing()
 clock = pygame.time.Clock()
 done = False
 finished_game = False
-# pygame.mixer.music.load('Ramones_Rock_N_Roll_High_School_1.ogg')
-# pygame.mixer.music.play()
 
 while not done:
     clock.tick(FPS)
@@ -49,7 +47,8 @@ while not done:
             else:
                 done = edit_events.process(pygame.event.get())
 
-if done == 2:
-    show_game_over_table(done)
+if (done != 0) and (done != 1):
+    endings = Endings(done, edit_events.stats.points.points)
+    endings.end()
 
 pygame.quit()
