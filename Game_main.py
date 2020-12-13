@@ -1,7 +1,8 @@
 import pygame
-from game_stats import *
-from game_mechanics import *
-from game_menu import *
+import Modules.game_stats
+from Modules.game_stats import *
+from Modules.game_mechanics import *
+from Modules.game_menu import *
 
 pygame.init()
 
