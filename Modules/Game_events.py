@@ -849,7 +849,7 @@ class Kozhevnikov_test():
                                               (screen_size[0] // 2, screen_size[1] // 2),
                                               (screen_size[0], screen_size[1]))
         Modules.game_mechanics.insert_text('Master is proud of you', 'Fonts/Game-font.ttf', GOLD,
-                                           (screen_size[0] // 2, 2 * screen_size[1] // 3),
+                                           (screen_size[0] // 2, 3 * screen_size[1] // 4),
                                            min(screen_size[0] // 9, screen_size[1] // 9))
 
 
@@ -1038,9 +1038,9 @@ class Evening():
         self.time = 0
         self.done = 0
         self.time_is_over = False
-        self.time_limit = 15 * FPS
-        self.time_text = 5 * FPS
-        self.reading_time = 5 * FPS
+        self.time_limit = 21 * FPS
+        self.time_text = 10 * FPS
+        self.reading_time = 10 * FPS
         self.text_list = self.text_choice1 = self.text_choice0 = []
         self.score = 0
         self.text_list = self.read_file('Evening')
@@ -1063,6 +1063,7 @@ class Evening():
                 self.draw_text()
             else:
                 self.draw()
+                self.time -= 1
         self.time += 1
         if self.time_is_over:
             return (self.done, not self.time_is_over, self.score)
@@ -1142,7 +1143,7 @@ class Evening():
         x = parameters[0] + parameters[2] // 2 - self.coord[0]
         y = parameters[3] // 2 + parameters [1] - self.coord[1]
         if (x * 2 // parameters[2]) ** 2 + (y * 2 // parameters[3]) ** 2 <= 1:
-            self.time = self.time_limit - self.reading_time + 1
+            self.time = self.time_limit - self.reading_time + 5
             return True
         else:
             return False
@@ -1153,9 +1154,9 @@ class Evening():
         '''
         Modules.game_mechanics.insert_picture('images/Laptop.jpg', (screen_size[0] // 2, screen_size[1] // 2), screen_size)
         ellipse(screen, WHITE, (screen_size[0] // 12, 5 * screen_size[1] // 7, screen_size[0] // 3, screen_size[1] // 5)) 
-        ellipse(screen, BLACK, (screen_size[0] // 12, 5 * screen_size[1] // 7, screen_size[0] // 3, screen_size[1] // 5), 3)
+        ellipse(screen, BLACK, (screen_size[0] // 12, 5 * screen_size[1] // 7, screen_size[0] // 3, screen_size[1] // 5), 7)
         ellipse(screen, WHITE, (4 * screen_size[0] // 6, 4 * screen_size[1] // 6, screen_size[0] // 5, screen_size[1] // 5)) 
-        ellipse(screen, GREY, (4 * screen_size[0] // 6, 4 * screen_size[1] // 6, screen_size[0] // 5, screen_size[1] // 5), 3)
+        ellipse(screen, GREY, (4 * screen_size[0] // 6, 4 * screen_size[1] // 6, screen_size[0] // 5, screen_size[1] // 5), 7)
         Modules.game_mechanics.insert_text('Фильм ужасов', 'Fonts/Kozhevnikov.ttf', BLACK,
                                                    (screen_size[0] // 12 + screen_size[0] // 6, 5 * screen_size[1] // 7 + screen_size[1] // 10),
                                                    min(screen_size[1] // 12, screen_size[0] // 12))
