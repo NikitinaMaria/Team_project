@@ -481,7 +481,6 @@ class Ivanov_test():
             if (self.number_of_task >= 5) or (self.time >= self.time_limit):
                 screen.fill(GREY)
                 FPS = 15
-                pygame.mixer.music.stop()
                 if self.score == 0:
                     self.draw_zero_score()
                 if self.score == 4:
