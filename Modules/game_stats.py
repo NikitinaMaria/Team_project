@@ -47,7 +47,7 @@ class Points:
         '''
         The function draws user's points
         '''
-        draw_text('Ваша оценка: ' + str(self.points), self.coord_x, self.coord_y, BLACK, 16)
+        draw_text('Ваша оценка: ' + str(self.points), self.coord_x, self.coord_y, WHITE, 16)
 
 
 class Mood_scale:
@@ -61,7 +61,7 @@ class Mood_scale:
         self.scale = pygame.transform.scale(self.mood_750, (50, 50))
 
     def draw(self):
-        draw_text('Настроение:', screen_size_x - 100, 20, BLACK, 16)
+        draw_text('Настроение:', screen_size_x - 100, 20, WHITE, 16)
         if self.mood_points >= 300:
             self.mood_color = GREEN
             self.scale = pygame.transform.scale(self.mood_750, (50, 50))
@@ -86,7 +86,7 @@ class Boost_scale:
         self.boost_color = LIL
 
     def draw(self):
-        draw_text('Усиление:', 40, 20, BLACK, 16)
+        draw_text('Усиление:', 40, 20, WHITE, 16)
         if self.boost_points > 0:
             self.boost_points -= 1
             rect(screen, self.boost_color, (10 - self.boost_points + 100, 35, self.boost_points, 15))
@@ -107,7 +107,7 @@ class Timer:
             self.scale = pygame.transform.scale(self.alarm_r, (50, 50))
         else:
             self.scale = pygame.transform.scale(self.alarm_l, (50, 50))
-        draw_text('Оставшееся время: ' + str(self.time // FPS), screen_size_x - 150, 100, BLACK, 16)
+        draw_text('Оставшееся время: ' + str(self.time // FPS), screen_size_x - 150, 100, WHITE, 16)
         screen.blit(self.scale, (screen_size_x - 50, 70))
         self.time -= 1
 
@@ -123,7 +123,7 @@ class Draw_stats:
         '''
         The function draws esc hint
         '''
-        draw_text('Для паузы нажмите ESC', screen_size_x - 120, screen_size_y - 20, BLACK, 16)
+        draw_text('Для паузы нажмите ESC', screen_size_x - 120, screen_size_y - 20, WHITE, 16)
 
     def draw(self):
         self.mood_scale.draw()

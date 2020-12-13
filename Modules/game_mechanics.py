@@ -7,6 +7,7 @@ from Modules.game_hero import *
 from Modules.game_stats import *
 from Modules.Game_events import *
 from Modules.game_supporting import *
+from Modules.game_design import *
 
 pygame.init()
 
@@ -62,25 +63,6 @@ def quit_condition(pressed_button):
     return final
 
 
-def draw_road(width_of_pictures, distance_between_roads):
-    """"
-    The function draws road
-    """
-    screen.fill(WHITE)
-    width_of_road = screen_size_x - 2 * width_of_pictures
-    polygon(screen, GREY, ((width_of_pictures, screen_size_y),
-                           (screen_size_x - width_of_pictures, screen_size_y),
-                           ((screen_size_x - width_of_road // 2) // 2 + width_of_road // 2, 0),
-                           ((screen_size_x - width_of_road // 2) // 2, 0)))
-
-    line(screen, WHITE, (width_of_pictures + (width_of_road - 2 * distance_between_roads) // 3, screen_size_y),
-         ((screen_size_x - width_of_road // 2) // 2 + (width_of_road // 2 - distance_between_roads) // 3, 0),
-         distance_between_roads)
-    line(screen, WHITE, (width_of_pictures + 2 * width_of_road // 3 + distance_between_roads, screen_size_y),
-         (screen_size_x // 2 + (width_of_road - 2 * distance_between_roads) // 12, 0),
-         distance_between_roads)
-
-
 class Editor:
     def __init__(self, gender, width_of_pictures, distance_between_roads):
         """
@@ -95,6 +77,7 @@ class Editor:
         self.distance_between_roads = distance_between_roads
         self.obstacles = []
         self.boosts = []
+        self.stars = []
         self.event_is_on = False
         self.stats = Draw_stats()
         self.boost_color = pygame.Surface((screen_size_x, screen_size_y))
@@ -144,10 +127,22 @@ class Editor:
         dead_boosts = []
         for j, boost in enumerate(self.boosts):
             boost.motion()
-            if not boost.is_alive:  # looks if the obstacle is dead, add it to the "Death book" if it's its time to die
+            if not boost.is_alive:  # looks if the boost is dead, add it to the "Death book" if it's its time to die
                 dead_boosts.append(j)
         for j in reversed(dead_boosts):
             self.boosts.pop(j)
+
+    def move_stars(self):
+        '''
+    	Increase y coordinate of stars, user see, how they are falling
+    	'''
+        dead_stars = []
+        for j, star in enumerate(self.stars):
+            star.motion()
+            if not star.is_alive:  # looks if the star is dead, add it to the "Death book" if it's its time to die
+                dead_stars.append(j)
+        for j in reversed(dead_stars):
+            self.stars.pop(j)
 
     def draw(self):
         '''
@@ -156,6 +151,8 @@ class Editor:
         screen.fill(BLACK)
         if not draw_titers(self):
             draw_road(self.width_of_pictures, self.distance_between_roads)
+            for star in self.stars:
+                star.draw()
             for obstacle in self.obstacles:
                 obstacle.draw()
             for boost in self.boosts:
@@ -225,6 +222,9 @@ class Editor:
                 if self.time % 67 == 0:
                     self.boosts.append(
                         Boost(10, randint(1, 3), 70, self.width_of_pictures, self.distance_between_roads))
+                if self.time % 30 == 0:
+                    self.stars.append(Stars(10, self.width_of_pictures))
+                self.move_stars()
                 self.move_obstacle()
                 self.move_boosts()
                 self.hero_boosting()
