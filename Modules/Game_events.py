@@ -522,19 +522,19 @@ class Ivanov_test():
 
     def draw_Celentano(self):
         if self.time <= 9:
-            Modules.game_mechanics.insert_picture('Videos/Celentano/ezgif-frame-00' + str(self.time) + '.jpg', 
+            Modules.game_mechanics.insert_picture('Videos1/ezgif-frame-00' + str(self.time) + '.jpg', 
                                         (screen_size[0] // 4, 3 * screen_size[1] // 4), (screen_size[0] // 2, screen_size[1] // 2))
         elif self.time <= 99 and self.time >= 10:
-            Modules.game_mechanics.insert_picture('Videos/Celentano/ezgif-frame-0' + str(self.time) + '.jpg', 
+            Modules.game_mechanics.insert_picture('Videos1/ezgif-frame-0' + str(self.time) + '.jpg', 
                                         (screen_size[0] // 4, 3 * screen_size[1] // 4), (screen_size[0] // 2, screen_size[1] // 2))
-        elif self.time >= 100 and self.time <= 200:
-            Modules.game_mechanics.insert_picture('Videos/Celentano/ezgif-frame-' + str(self.time) + '.jpg', 
+        elif self.time >= 100 and self.time <= 199:
+            Modules.game_mechanics.insert_picture('Videos2/ezgif-frame-' + str(self.time) + '.jpg', 
                                         (screen_size[0] // 4, 3 * screen_size[1] // 4), (screen_size[0] // 2, screen_size[1] // 2))
-        elif self.time > 200 and self.time <= 209:
-            Modules.game_mechanics.insert_picture('Videos/Celentano/ezgif-frame-00' + str(self.time - 200) + '.jpg', 
+        elif self.time > 199 and self.time <= 208:
+            Modules.game_mechanics.insert_picture('Videos1/ezgif-frame-00' + str(self.time - 199) + '.jpg', 
                                         (screen_size[0] // 4, 3 * screen_size[1] // 4), (screen_size[0] // 2, screen_size[1] // 2))
         else:
-            Modules.game_mechanics.insert_picture('Videos/Celentano/ezgif-frame-0' + str(self.time - 200) + '.jpg', 
+            Modules.game_mechanics.insert_picture('Videos1/ezgif-frame-0' + str(self.time - 199) + '.jpg', 
                                         (screen_size[0] // 4, 3 * screen_size[1] // 4), (screen_size[0] // 2, screen_size[1] // 2))
 
     def draw_right_or_wrong_answer(self):
