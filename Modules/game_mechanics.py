@@ -41,6 +41,7 @@ def insert_picture(name, position, size):
     rect = surf.get_rect(center=position)
     screen.blit(surf, rect)
 
+
 def insert_text(string, font, color, position, size):
     '''
     Paste text according to the position of its center
@@ -49,6 +50,7 @@ def insert_text(string, font, color, position, size):
     surface = text_style.render(string, True, color)
     textRect = surface.get_rect(center=position)
     screen.blit(surface, textRect)
+
 
 def quit_condition(pressed_button):
     """
@@ -77,6 +79,7 @@ def draw_road(width_of_pictures, distance_between_roads):
     line(screen, WHITE, (width_of_pictures + 2 * width_of_road // 3 + distance_between_roads, screen_size_y),
          (screen_size_x // 2 + (width_of_road - 2 * distance_between_roads) // 12, 0),
          distance_between_roads)
+
 
 class Editor:
     def __init__(self, gender, width_of_pictures, distance_between_roads):
@@ -241,7 +244,7 @@ class Editor:
         if self.analit.pressed_or_not_button(events) and self.event_is_on == False:
             self.event_is_on = True
             self.Event = self.analit
-        if self.time % 150 == 0 and self.time != self.time_for_Kozhevnikov_test:
+        if self.time % 700 == 0 and self.time != self.time_for_Kozhevnikov_test:
             self.event_is_on = True
             FPS = 20
             self.Event = Ivanov_test()
@@ -254,7 +257,6 @@ class Editor:
         if self.time == self.time_for_Kozhevnikov_test:
             self.event_is_on = True
             self.Event = Kozhevnikov_test()
-
 
 
 if __name__ == "__main__":

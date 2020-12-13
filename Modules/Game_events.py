@@ -7,11 +7,13 @@ from Modules.game_mechanics import *
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+DARK_RED = (168, 0, 0)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 GOLD = (238, 201, 0)
 BLACKBOARD = (65, 86, 71)
 BLACKBOARD_3 = (81, 78, 36)
+
 
 class Stream:
     def __init__(self):
@@ -228,13 +230,13 @@ class Stream:
                         (mouse_y > 4 * screen_size_y // 9) and (mouse_y < 4 * screen_size_y // 9 + 70):
                     self.stream_is_on = False
                     self.points = 0
-    
+
     def progress(self, events):
         self.draw()
         self.answer(events)
         if self.stream_is_on == False:
             self.step = 1
-            if self.points == 1:        
+            if self.points == 1:
                 return (self.done, self.stream_is_on, self.points)
             else:
                 return (self.done, self.stream_is_on, 0)
@@ -322,7 +324,8 @@ class Analit:
         screen.blit(self.scale, (0, 0))
         if self.step == 1:
             if self.ask_time > 0:
-                rect(screen, GOLD, (200 - self.ask_time * 2 + screen_size_x // 5 + 50, screen_size_y // 5 - 50, self.ask_time * 2, 20))
+                rect(screen, GOLD, (
+                    200 - self.ask_time * 2 + screen_size_x // 5 + 50, screen_size_y // 5 - 50, self.ask_time * 2, 20))
                 rect(screen, BLACK, (screen_size_x // 5 + 50, screen_size_y // 5 - 50, 200, 20), 5)
                 self.ask_time -= 1
                 ellipse(screen, BLACK, (screen_size_x // 5, screen_size_y // 5, 302, 202), 3)
@@ -372,7 +375,7 @@ class Analit:
                 self.analit_is_on = False
 
     def pressed_or_not_button(self, events):
-        #self.draw_sweater()
+        # self.draw_sweater()
         return self.check_sweater(events)
 
     def answer(self, events):
@@ -397,7 +400,7 @@ class Analit:
             self.step = 1
             self.ask_time = 100
             self.sweater_time = 200
-            if self.points == 1:        
+            if self.points == 1:
                 return (self.done, self.analit_is_on, self.points)
             else:
                 return (self.done, self.analit_is_on, 0)
@@ -409,13 +412,11 @@ class Analit:
 class Ivanov_test():
     def __init__(self):
         '''
-        Set test's parameters and thier meanings
+        Set test's parameters and their meanings
         '''
         self.time = 0
         self.length = min(screen_size[0] // 7, screen_size[1] // 7)
         self.done = 0
-        pygame.mixer.music.load('audio/Celentano.mp3')
-        pygame.mixer.music.play()
         self.time_is_over = False
         self.time_limit = 15 * FPS
         self.growing_time = 1 * FPS
@@ -464,15 +465,15 @@ class Ivanov_test():
         rect(screen, RED, (0, 0, int(self.time * time_scale), 10))
         if self.time <= self.growing_time:
             Modules.game_mechanics.insert_text("Dancing time!", "Fonts/Game-font.ttf", GREEN,
-                                       (screen_size[0] // 2, screen_size[1] // 2),
-                                       self.time * self.time)
+                                               (screen_size[0] // 2, screen_size[1] // 2),
+                                               self.time * self.time)
         else:
             if self.number_of_task <= 4 and self.time <= self.time_limit:
                 self.draw_task()
                 for i in range(4):
                     Modules.game_mechanics.insert_text(str(i + 1) + ') ', "Fonts/Game-font.ttf", BLACK,
-                                               (screen_size[0] // 12,
-                                                i * self.length_of_answer_pic + screen_size[1] // 5), 20)
+                                                       (screen_size[0] // 12,
+                                                        i * self.length_of_answer_pic + screen_size[1] // 5), 20)
                 rect(screen, BLACK, (screen_size[0] // 2 - 5 * self.length_of_asterisk // 2 - 3,
                                      2 * screen_size[1] // 5 - self.length_of_asterisk // 2,
                                      5 * self.length_of_asterisk + 6, self.length_of_asterisk + 6), 3)
@@ -487,16 +488,16 @@ class Ivanov_test():
                     self.draw_max_score()
                 if self.score == 1 or self.score == 2:
                     Modules.game_mechanics.insert_text('Not so bad', 'Fonts/Game-font.ttf', BLACK,
-                                               (screen_size[0] // 2, 3 * screen_size[1] // 4),
-                                               min(screen_size[0] // 9, screen_size[1] // 9))
+                                                       (screen_size[0] // 2, 3 * screen_size[1] // 4),
+                                                       min(screen_size[0] // 9, screen_size[1] // 9))
                 if self.score == 3:
                     Modules.game_mechanics.insert_text('Just great!', 'Fonts/Game-font.ttf', GREEN,
-                                               (screen_size[0] // 2, 3 * screen_size[1] // 4),
-                                               min(screen_size[0] // 9, screen_size[1] // 8))
+                                                       (screen_size[0] // 2, 3 * screen_size[1] // 4),
+                                                       min(screen_size[0] // 9, screen_size[1] // 8))
                 for i in range(4):
                     Modules.game_mechanics.insert_text(str(i + 1) + ') ', "Fonts/Game-font.ttf", WHITE,
-                                               (screen_size[0] // 12,
-                                                i * self.length_of_answer_pic + screen_size[1] // 5), 20)
+                                                       (screen_size[0] // 12,
+                                                        i * self.length_of_answer_pic + screen_size[1] // 5), 20)
             self.draw_right_or_wrong_answer()
         pygame.display.update()
 
@@ -505,37 +506,42 @@ class Ivanov_test():
         Puts falure picture on the screen
         '''
         Modules.game_mechanics.insert_picture('images/Falure.jpg', (screen_size[0] // 2, screen_size[1] // 2),
-                                      (screen_size[0], screen_size[1]))
+                                              (screen_size[0], screen_size[1]))
         Modules.game_mechanics.insert_text('You need to work harder', 'Fonts/Game-font.ttf', WHITE,
-                                   (screen_size[0] // 2, 3 * screen_size[1] // 4),
-                                   min(screen_size[0] // 9, screen_size[1] // 9))
+                                           (screen_size[0] // 2, 3 * screen_size[1] // 4),
+                                           min(screen_size[0] // 9, screen_size[1] // 9))
 
     def draw_max_score(self):
         '''
         Puts happy Ivanov's picture on the screen
         '''
         Modules.game_mechanics.insert_picture('images/Happy_master.jpg', (screen_size[0] // 2, screen_size[1] // 2),
-                                      (screen_size[0], screen_size[1]))
+                                              (screen_size[0], screen_size[1]))
         Modules.game_mechanics.insert_text('Master is proud of you', 'Fonts/Game-font.ttf', GOLD,
-                                   (screen_size[0] // 2, 2 * screen_size[1] // 3),
-                                   min(screen_size[0] // 9, screen_size[1] // 9))
+                                           (screen_size[0] // 2, 2 * screen_size[1] // 3),
+                                           min(screen_size[0] // 9, screen_size[1] // 9))
 
     def draw_Celentano(self):
         if self.time <= 9:
-            Modules.game_mechanics.insert_picture('Videos1/ezgif-frame-00' + str(self.time) + '.jpg', 
-                                        (screen_size[0] // 4, 3 * screen_size[1] // 4), (screen_size[0] // 2, screen_size[1] // 2))
+            Modules.game_mechanics.insert_picture('Videos1/ezgif-frame-00' + str(self.time) + '.jpg',
+                                                  (screen_size[0] // 4, 3 * screen_size[1] // 4),
+                                                  (screen_size[0] // 2, screen_size[1] // 2))
         elif self.time <= 99 and self.time >= 10:
-            Modules.game_mechanics.insert_picture('Videos1/ezgif-frame-0' + str(self.time) + '.jpg', 
-                                        (screen_size[0] // 4, 3 * screen_size[1] // 4), (screen_size[0] // 2, screen_size[1] // 2))
+            Modules.game_mechanics.insert_picture('Videos1/ezgif-frame-0' + str(self.time) + '.jpg',
+                                                  (screen_size[0] // 4, 3 * screen_size[1] // 4),
+                                                  (screen_size[0] // 2, screen_size[1] // 2))
         elif self.time >= 100 and self.time <= 199:
-            Modules.game_mechanics.insert_picture('Videos2/ezgif-frame-' + str(self.time) + '.jpg', 
-                                        (screen_size[0] // 4, 3 * screen_size[1] // 4), (screen_size[0] // 2, screen_size[1] // 2))
+            Modules.game_mechanics.insert_picture('Videos2/ezgif-frame-' + str(self.time) + '.jpg',
+                                                  (screen_size[0] // 4, 3 * screen_size[1] // 4),
+                                                  (screen_size[0] // 2, screen_size[1] // 2))
         elif self.time > 199 and self.time <= 208:
-            Modules.game_mechanics.insert_picture('Videos1/ezgif-frame-00' + str(self.time - 199) + '.jpg', 
-                                        (screen_size[0] // 4, 3 * screen_size[1] // 4), (screen_size[0] // 2, screen_size[1] // 2))
+            Modules.game_mechanics.insert_picture('Videos1/ezgif-frame-00' + str(self.time - 199) + '.jpg',
+                                                  (screen_size[0] // 4, 3 * screen_size[1] // 4),
+                                                  (screen_size[0] // 2, screen_size[1] // 2))
         else:
-            Modules.game_mechanics.insert_picture('Videos1/ezgif-frame-0' + str(self.time - 199) + '.jpg', 
-                                        (screen_size[0] // 4, 3 * screen_size[1] // 4), (screen_size[0] // 2, screen_size[1] // 2))
+            Modules.game_mechanics.insert_picture('Videos1/ezgif-frame-0' + str(self.time - 199) + '.jpg',
+                                                  (screen_size[0] // 4, 3 * screen_size[1] // 4),
+                                                  (screen_size[0] // 2, screen_size[1] // 2))
 
     def draw_right_or_wrong_answer(self):
         '''
@@ -546,18 +552,18 @@ class Ivanov_test():
                 Modules.game_mechanics.insert_picture('images/asterisk.png', (
                     screen_size[0] // 2 - 4 * self.length_of_asterisk // 2 + i * self.length_of_asterisk,
                     2 * screen_size[1] // 5),
-                                              (self.length_of_asterisk, self.length_of_asterisk))
+                                                      (self.length_of_asterisk, self.length_of_asterisk))
         for i in range(self.number_of_task - 1):
             if self.answer_list[i] == True:
                 Modules.game_mechanics.insert_picture('images/right_ans.png', (
                     screen_size[0] // 12 + self.length_of_answer_pic,
                     i * self.length_of_answer_pic + screen_size[1] // 5),
-                                              (self.length_of_answer_pic, self.length_of_answer_pic))
+                                                      (self.length_of_answer_pic, self.length_of_answer_pic))
             else:
                 Modules.game_mechanics.insert_picture('images/wrong.jpg', (
                     screen_size[0] // 12 + self.length_of_answer_pic,
                     i * self.length_of_answer_pic + screen_size[1] // 5),
-                                              (self.length_of_answer_pic, self.length_of_answer_pic))
+                                                      (self.length_of_answer_pic, self.length_of_answer_pic))
 
     def user_events(self, events):
         '''
@@ -607,7 +613,7 @@ class Ivanov_test():
         else:
             self.draw_epsilon()
         Modules.game_mechanics.insert_picture('images/Hint.png', (4 * screen_size[0] // 5, screen_size[1] // 3),
-                                      (screen_size[0] // 3, screen_size[1] // 3))
+                                              (screen_size[0] // 3, screen_size[1] // 3))
 
     def draw_for_all(self):
         line(screen, BLACK, (self.x - self.length // 2, self.y - self.length // 2), (self.x, self.y + self.length // 2),
@@ -714,8 +720,9 @@ class Kozhevnikov_test():
         Draws picture with the text on it, turns on and off backstage music, switches active question form to another
         '''
         Modules.game_mechanics.insert_picture(name, (screen_size[0] // 2, screen_size[1] // 2), screen_size)
-        Modules.game_mechanics.insert_text(text, 'Fonts/Game-font.ttf', color, (screen_size[0] // 2, 7 * screen_size[1] // 8),
-                                   min(screen_size[0] // 8, screen_size[1] // 8))
+        Modules.game_mechanics.insert_text(text, 'Fonts/Game-font.ttf', color,
+                                           (screen_size[0] // 2, 7 * screen_size[1] // 8),
+                                           min(screen_size[0] // 8, screen_size[1] // 8))
         if self.time == self.time_start + self.answer_music_time:
             sound2 = pygame.mixer.Sound(audio)
             sound2.play()
@@ -765,7 +772,8 @@ class Kozhevnikov_test():
         '''
         Draws logo of the game 
         '''
-        Modules.game_mechanics.insert_picture('images/quiz.jpg', (screen_size[0] // 2, screen_size[1] // 2), screen_size)
+        Modules.game_mechanics.insert_picture('images/quiz.jpg', (screen_size[0] // 2, screen_size[1] // 2),
+                                              screen_size)
 
     def draw(self):
         '''
@@ -773,10 +781,10 @@ class Kozhevnikov_test():
         '''
         screen.fill(WHITE)
         Modules.game_mechanics.insert_picture('images/Answer_sheet' + str(self.number_of_answer) + '.png',
-                                      (screen_size[0] // 2, screen_size[1] // 2), screen_size)
+                                              (screen_size[0] // 2, screen_size[1] // 2), screen_size)
         Modules.game_mechanics.insert_text('Вопрос ' + str(self.number_of_task), 'Fonts/Kozhevnikov.ttf', WHITE,
-                                   (5 * min(screen_size[1] // 20, screen_size[0] // 20),
-                                    1 * screen_size[1] // 20), min(screen_size[1] // 15, screen_size[0] // 15))
+                                           (5 * min(screen_size[1] // 20, screen_size[0] // 20),
+                                            1 * screen_size[1] // 20), min(screen_size[1] // 15, screen_size[0] // 15))
         count = 0
         task = self.task_list[self.number_of_task - 1]
         inserted_text_of_question = False
@@ -789,13 +797,13 @@ class Kozhevnikov_test():
                 count += -1
             if not inserted_text_of_question:
                 Modules.game_mechanics.insert_text(string, 'Fonts/Kozhevnikov.ttf', WHITE,
-                                           (screen_size[0] // 2, (4 + count) * screen_size[1] // 20),
-                                           min(screen_size[1] // 15, screen_size[0] // 15))
+                                                   (screen_size[0] // 2, (4 + count) * screen_size[1] // 20),
+                                                   min(screen_size[1] // 15, screen_size[0] // 15))
             elif count >= 0 and string != 'r\n':
                 Modules.game_mechanics.insert_text(string[0: len(string) - 3], 'Fonts/Kozhevnikov.ttf', WHITE, (
-                35 * int(string[len(string) - 3:len(string) - 1]) / 100 * min(screen_size[1] // 25,
-                                                                              screen_size[0] // 25),
-                (44 + 10 * count) * screen_size[1] // 80), min(screen_size[1] // 15, screen_size[0] // 15))
+                    35 * int(string[len(string) - 3:len(string) - 1]) / 100 * min(screen_size[1] // 25,
+                                                                                  screen_size[0] // 25),
+                    (44 + 10 * count) * screen_size[1] // 80), min(screen_size[1] // 15, screen_size[0] // 15))
             count += 1
 
     def draw_score(self):
@@ -809,18 +817,18 @@ class Kozhevnikov_test():
             self.draw_max_score()
         if self.score == 3 or self.score == 2:
             Modules.game_mechanics.insert_text('Not so bad', 'Fonts/Game-font.ttf', BLACK,
-                                       (screen_size[0] // 2, 3 * screen_size[1] // 4),
-                                       min(screen_size[0] // 9, screen_size[1] // 9))
+                                               (screen_size[0] // 2, 3 * screen_size[1] // 4),
+                                               min(screen_size[0] // 9, screen_size[1] // 9))
             Modules.game_mechanics.insert_text(str(self.score), 'Fonts/Game-font.ttf', BLACK,
-                                       (screen_size[0] // 2, screen_size[1] // 2),
-                                       min(screen_size[0] // 5, screen_size[1] // 5))
+                                               (screen_size[0] // 2, screen_size[1] // 2),
+                                               min(screen_size[0] // 5, screen_size[1] // 5))
         if self.score == 4:
             Modules.game_mechanics.insert_text('Just great!', 'Fonts/Game-font.ttf', GREEN,
-                                       (screen_size[0] // 2, 3 * screen_size[1] // 4),
-                                       min(screen_size[0] // 5, screen_size[1] // 5))
+                                               (screen_size[0] // 2, 3 * screen_size[1] // 4),
+                                               min(screen_size[0] // 5, screen_size[1] // 5))
             Modules.game_mechanics.insert_text(str(self.score), 'Fonts/Game-font.ttf', GREEN,
-                                       (screen_size[0] // 2, screen_size[1] // 2),
-                                       min(screen_size[0] // 5, screen_size[1] // 5))
+                                               (screen_size[0] // 2, screen_size[1] // 2),
+                                               min(screen_size[0] // 5, screen_size[1] // 5))
         pygame.display.update()
 
     def draw_zero_score(self):
@@ -828,32 +836,42 @@ class Kozhevnikov_test():
         Puts sad falure picture on the screen
         '''
         Modules.game_mechanics.insert_picture('images/Falure.jpg', (screen_size[0] // 2, screen_size[1] // 2),
-                                      (screen_size[0], screen_size[1]))
+                                              (screen_size[0], screen_size[1]))
         Modules.game_mechanics.insert_text('You need to work harder', 'Fonts/Game-font.ttf', WHITE,
-                                   (screen_size[0] // 2, 3 * screen_size[1] // 4),
-                                   min(screen_size[0] // 9, screen_size[1] // 9))
+                                           (screen_size[0] // 2, 3 * screen_size[1] // 4),
+                                           min(screen_size[0] // 9, screen_size[1] // 9))
 
     def draw_max_score(self):
         '''
         Draws Kozhevnikov in role of the master of the world picture with words on it
         '''
-        Modules.game_mechanics.insert_picture('images/Master_of_the_world.jpg', (screen_size[0] // 2, screen_size[1] // 2),
-                                      (screen_size[0], screen_size[1]))
+        Modules.game_mechanics.insert_picture('images/Master_of_the_world.jpg',
+                                              (screen_size[0] // 2, screen_size[1] // 2),
+                                              (screen_size[0], screen_size[1]))
         Modules.game_mechanics.insert_text('Master is proud of you', 'Fonts/Game-font.ttf', GOLD,
-                                   (screen_size[0] // 2, 2 * screen_size[1] // 3),
-                                   min(screen_size[0] // 9, screen_size[1] // 9))
+                                           (screen_size[0] // 2, 2 * screen_size[1] // 3),
+                                           min(screen_size[0] // 9, screen_size[1] // 9))
 
 
 class Endings:
     def __init__(self, number, final_points):
         self.number = number
         self.final_points = final_points
+
+        # Images
         self.fox = pygame.image.load('images/fox.png')
+        self.hor = pygame.image.load('images/hor.png')
+        self.konfetti = pygame.image.load('images/konfetti.png')
         self.fail = pygame.image.load('images/fail.jpg')
+        self.fail_black = pygame.image.load('images/fail_black.jpg')
         self.sleep = pygame.image.load('images/sleep.jpg')
         self.matrix = pygame.image.load('images/matrix.jpg')
         self.left_cloud = pygame.image.load('images/left_cloud.png')
         self.right_cloud = pygame.image.load('images/right_cloud.png')
+        self.cat = pygame.image.load('images/DGAP-cat.jpg')
+        self.fopf = pygame.image.load('images/fopf.jpg')
+        self.cry = pygame.image.load('images/cry.jpg')
+        self.impossible = pygame.image.load('images/impossible.jpg')
 
     def quit_or_not(self):
         while self.number != 1:
@@ -861,19 +879,21 @@ class Endings:
                 self.number = Modules.game_mechanics.quit_condition(event.type)
 
     def end_2(self):
+        # The player encountered an obstacle
         screen.fill(WHITE)
-        self.scale = self.scale = pygame.transform.scale(self.fail, (screen_size_x // 5, screen_size_y // 4))
+        self.scale = pygame.transform.scale(self.fail, (screen_size_x // 5, screen_size_y // 4))
         screen.blit(self.scale, (0, 0))
         draw_text('Притяжение к кровати оказалось сильнее Вас...', screen_size_x // 2,
                   screen_size_y // 2 - 90, BLACK, 24)
-        self.scale = self.scale = pygame.transform.scale(self.sleep, (screen_size_x // 4, screen_size_y //3))
+        self.scale = pygame.transform.scale(self.sleep, (screen_size_x // 4, screen_size_y // 3))
         screen.blit(self.scale, (screen_size_x // 2 - screen_size_x // 10, screen_size_y // 2))
         pygame.display.update()
         self.quit_or_not()
 
     def end_3(self):
+        # The player has run out of mood scale
         screen.fill(WHITE)
-        self.scale = self.scale = pygame.transform.scale(self.fail, (screen_size_x // 5, screen_size_y // 4))
+        self.scale = pygame.transform.scale(self.fail, (screen_size_x // 5, screen_size_y // 4))
         screen.blit(self.scale, (0, 0))
         draw_text('Вы настолько увлеклись подготовкой к экзаменам,', screen_size_x // 2,
                   screen_size_y // 2 - 150, BLACK, 24)
@@ -885,15 +905,92 @@ class Endings:
                   screen_size_y // 2 - 60, BLACK, 24)
         draw_text('Уныние погубило Вас...', screen_size_x // 2,
                   screen_size_y // 2 - 30, BLACK, 24)
-        self.scale = self.scale = pygame.transform.scale(self.fox, (screen_size_x // 5, screen_size_y // 3))
+        self.scale = pygame.transform.scale(self.fox, (screen_size_x // 5, screen_size_y // 3))
         screen.blit(self.scale, (screen_size_x // 2 - screen_size_x // 10, screen_size_y // 2))
         pygame.display.update()
         self.quit_or_not()
 
+    def end_5(self):
+        # Bad end
+        screen.fill(BLACK)
+        self.scale = pygame.transform.scale(self.fail_black, (screen_size_x // 5 + 50, screen_size_y // 4))
+        screen.blit(self.scale, (0, 0))
+        self.scale = pygame.transform.scale(self.cat, (screen_size_x // 2, 2 * screen_size_y // 3))
+        screen.blit(self.scale, (screen_size_x // 4, screen_size_y // 2 - 150))
+        draw_text('До встречи через год...', screen_size_x // 2, screen_size_y // 3 - 50, DARK_RED, 50)
+        draw_text('И помните: это только начало...', screen_size_x // 2, screen_size_y - 30, DARK_RED, 39)
+        pygame.display.update()
+        self.quit_or_not()
+
+    def end_6(self):
+        # Normal end
+        screen.fill(WHITE)
+        self.scale = pygame.transform.scale(self.cry, (screen_size_x // 5, screen_size_y // 3))
+        screen.blit(self.scale, (screen_size_x // 2 - screen_size_x // 10, screen_size_y // 2))
+        draw_text('Стипендии Вам не видать, но Вы хотя бы смогли выжить.', screen_size_x // 2,
+                  screen_size_y // 2 - 120, BLACK, 24)
+        draw_text('Это уже можно считать достижением! Поздравляем!', screen_size_x // 2,
+                  screen_size_y // 2 - 90, BLACK, 24)
+        draw_text('Ваш балл: уд(' + str(self.final_points) + ')', screen_size_x // 2,
+                  screen_size_y // 2 - 60, BLACK, 24)
+        pygame.display.update()
+        self.quit_or_not()
+
+    def end_7(self):
+        # Good end
+        screen.fill(WHITE)
+        self.scale = pygame.transform.scale(self.hor, (screen_size_x // 5, screen_size_y // 3))
+        screen.blit(self.scale, (screen_size_x // 2 - screen_size_x // 10, screen_size_y // 2))
+        draw_text('На абрамовку Вы не тянете, но результат очень неплох.', screen_size_x // 2,
+                  screen_size_y // 2 - 120, BLACK, 24)
+        draw_text('Поздавляем! Вы заслужили небольшой отдых и стипендию!', screen_size_x // 2,
+                  screen_size_y // 2 - 90, BLACK, 24)
+        draw_text('Ваш балл: хор(' + str(self.final_points) + ')', screen_size_x // 2,
+                  screen_size_y // 2 - 60, BLACK, 24)
+        pygame.display.update()
+        self.quit_or_not()
+
+    def end_8(self):
+        # Happy end
+        screen.fill(WHITE)
+        self.scale = pygame.transform.scale(self.fopf, (screen_size_x // 5, screen_size_y // 3))
+        screen.blit(self.scale, (screen_size_x // 2 - screen_size_x // 10, screen_size_y // 2))
+        draw_text('Непрерывный бот принёс свои плоды.', screen_size_x // 2,
+                  screen_size_y // 2 - 150, BLACK, 24)
+        draw_text('Мы восхищены Вами! Результат настоящего ФОПФа.', screen_size_x // 2,
+                  screen_size_y // 2 - 120, BLACK, 24)
+        draw_text('(Если, конечно, Вы не списали).', screen_size_x // 2,
+                  screen_size_y // 2 - 90, BLACK, 24)
+        draw_text('Ваш балл: отл(' + str(self.final_points) + ')', screen_size_x // 2,
+                  screen_size_y // 2 - 60, BLACK, 24)
+        pygame.display.update()
+        self.quit_or_not()
+
+    def end_9(self):
+        # Best end
+        screen.fill(WHITE)
+        self.scale = pygame.transform.scale(self.impossible, (screen_size_x // 2, screen_size_y // 2 - 30))
+        screen.blit(self.scale, (screen_size_x // 2 - screen_size_x // 4, screen_size_y // 2))
+        self.scale = pygame.transform.scale(self.konfetti, (screen_size_x, screen_size_y))
+        screen.blit(self.scale, (0, 0))
+        draw_text('Не верится глазам! Вы совершили невозможное!', screen_size_x // 2,
+                  screen_size_y // 2 - 150, BLACK, 24)
+        draw_text('Признайтесь, Вы использовали грязные приёмы.', screen_size_x // 2,
+                  screen_size_y // 2 - 120, BLACK, 24)
+        draw_text('Что ж... От души поздравляем!', screen_size_x // 2,
+                  screen_size_y // 2 - 90, BLACK, 24)
+        draw_text('Ваш балл: отл(10)', screen_size_x // 2,
+                  screen_size_y // 2 - 60, BLACK, 24)
+        pygame.display.update()
+        self.quit_or_not()
+
     def end_4(self):
+        # Time's up
         if self.final_points <= 2:
+
+            # Event when the player has a low score
             screen.fill(WHITE)
-            self.scale = self.scale = pygame.transform.scale(self.matrix, (screen_size_x, screen_size_y))
+            self.scale = pygame.transform.scale(self.matrix, (screen_size_x, screen_size_y))
             screen.blit(self.scale, (0, 0))
             rect(screen, BLACK, (screen_size_x // 5, 0, 3 * screen_size_x // 5, 75), 3)
             rect(screen, WHITE, (screen_size_x // 5, 0, 3 * screen_size_x // 5, 75))
@@ -906,7 +1003,24 @@ class Endings:
             screen.blit(self.scale, (2 * screen_size_x // 3, screen_size_y // 2))
             draw_text('Академ', 5 * screen_size_x // 6, 2 * screen_size_y // 3 - 20, BLUE, 30)
             pygame.display.update()
-            self.quit_or_not()
+
+            # Checking user selection
+            while self.number != 1:
+                for event in pygame.event.get():
+                    self.number = Modules.game_mechanics.quit_condition(event.type)
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        mouse_x, mouse_y = event.pos
+                        if (((mouse_x >= 0) and (mouse_x <= screen_size_x // 3)) or ((mouse_x >= 2 * screen_size_x // 3) and (mouse_x <= screen_size_x))) and (mouse_y >= screen_size_y // 2) and (mouse_y <= 5 * screen_size_y // 6):
+                            self.end_5()
+        else:
+            if (self.final_points >= 3) and (self.final_points <= 4):
+                self.end_6()
+            elif (self.final_points >= 5) and (self.final_points <= 7):
+                self.end_7()
+            elif (self.final_points >= 8) and (self.final_points <= 9):
+                self.end_8()
+            elif self.final_points >= 10:
+                self.end_9()
 
     def end(self):
         if self.number == 2:
@@ -915,6 +1029,7 @@ class Endings:
             self.end_3()
         elif self.number == 4:
             self.end_4()
+
 
 if __name__ == "__main__":
     print("This module is not for direct call!")
