@@ -481,6 +481,7 @@ class Ivanov_test():
             if (self.number_of_task >= 5) or (self.time >= self.time_limit):
                 screen.fill(GREY)
                 FPS = 15
+                pygame.mixer.music.stop()
                 if self.score == 0:
                     self.draw_zero_score()
                 if self.score == 4:
@@ -1029,6 +1030,138 @@ class Endings:
         elif self.number == 4:
             self.end_4()
 
+class Evening():
+    def __init__(self):
+        '''
+        Set test's parameters and thier meanings
+        '''
+        self.time = 0
+        self.done = 0
+        self.time_is_over = False
+        self.time_limit = 15 * FPS
+        self.time_text = 5 * FPS
+        self.reading_time = 5 * FPS
+        self.text_list = self.text_choice1 = self.text_choice0 = []
+        self.score = 0
+        self.text_list = self.read_file('Evening')
+        self.text_choice0 = self.read_file('Choice0')
+        self.text_choice1 = self.read_file('Choice1')
+        self.choice = 1
+
+    def progress(self, events):
+        '''
+        Manager function for all processes in test, makes it work and finish
+        If time for the choice is over gives back resalt for choice 0
+        '''
+        self.user_events(events)
+        if self.time >= self.time_limit - self.reading_time:
+            self.draw_result()
+            if self.time == self.time_limit:
+                self.time_is_over = True
+        else:
+            if self.time <= self.time_text:
+                self.draw_text()
+            else:
+                self.draw()
+        self.time += 1
+        if self.time_is_over:
+            return (self.done, not self.time_is_over, self.score)
+        else:
+            return (self.done, not self.time_is_over, 0)
+
+    def draw_result(self):
+        '''
+        Draws final page with results of user's choice
+        '''
+        if self.choice == 0:
+            Modules.game_mechanics.insert_picture('images/Lab.jpg', (screen_size[0] // 2, 3 * screen_size[1] // 4), (screen_size[0] // 2, screen_size[1] // 2))
+            self.print_text(self.text_choice0, screen_size[0] // 2)
+        if self.choice == 1:
+            Modules.game_mechanics.insert_picture('images/Horror.jpg', (screen_size[1] // 3, screen_size[1] // 2), 
+                                                 (2 * screen_size[1] // 3, screen_size[1]))
+            self.print_text(self.text_choice1, 11 * screen_size[0] // 16) 
+
+    def read_file(self, name):
+        '''
+        Returns back the list with strings from the file named in name
+        '''
+        array = []
+        with open('Text_files/'+ name + '.txt', encoding='utf-8') as file:
+            String = []
+            for line in file:
+                if line == '\n':
+                    array.append(String)
+                    String = []
+                else:
+                    line.encode()
+                    String.append(line)
+        return array
+
+    def print_text(self, array, position):
+        '''
+        Prints text on the screan according to its x position
+        '''
+        count = 0
+        for string in array:
+            count += 1
+            Modules.game_mechanics.insert_text(string[0], 'Fonts/Kozhevnikov.ttf', BLACK,
+                                               (position, (count) * screen_size[1] // 13),
+                                               min(screen_size[1] // 15, screen_size[0] // 15))
+    def draw_text(self):
+        '''
+        Draws text in the beggining
+        '''
+        screen.fill(GREY)
+        count = -1
+        for string in self.text_list:
+            count += 1
+            Modules.game_mechanics.insert_text(string[0], 'Fonts/Kozhevnikov.ttf', GOLD,
+                                                   (screen_size[0] // 2, (4 + count) * screen_size[1] // 13),
+                                                   min(screen_size[1] // 12, screen_size[0] // 12))
+
+    def user_events(self, events):
+        '''
+        Analyzes user's actions such as clicking, if the click was on variant of answer make a veto on choosing another variant
+        Don't count the click on the other field like the question table
+        '''
+        for event in events:
+            self.done = Modules.game_mechanics.quit_condition(event.type)
+            if event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1 or event.button == 3:
+                    self.coord = pygame.mouse.get_pos()
+                    if self.in_ellipse((screen_size[0] // 12, 5 * screen_size[1] // 7, screen_size[0] // 3, screen_size[1] // 5)):
+                        self.choice = 0
+                    if self.in_ellipse((4 * screen_size[0] // 6, 4 * screen_size[1] // 6, screen_size[0] // 5, screen_size[1] // 5)):
+                        self.choice = 1
+                        self.score = 1
+
+    def in_ellipse(self, parameters):
+        '''
+        Checks if the click was in ellipse with given parameters
+        '''
+        x = parameters[0] + parameters[2] // 2 - self.coord[0]
+        y = parameters[3] // 2 + parameters [1] - self.coord[1]
+        if (x * 2 // parameters[2]) ** 2 + (y * 2 // parameters[3]) ** 2 <= 1:
+            self.time = self.time_limit - self.reading_time + 1
+            return True
+        else:
+            return False
+
+    def draw(self):
+        '''
+        Draws page with Laptop to chose button
+        '''
+        Modules.game_mechanics.insert_picture('images/Laptop.jpg', (screen_size[0] // 2, screen_size[1] // 2), screen_size)
+        ellipse(screen, WHITE, (screen_size[0] // 12, 5 * screen_size[1] // 7, screen_size[0] // 3, screen_size[1] // 5)) 
+        ellipse(screen, BLACK, (screen_size[0] // 12, 5 * screen_size[1] // 7, screen_size[0] // 3, screen_size[1] // 5), 3)
+        ellipse(screen, WHITE, (4 * screen_size[0] // 6, 4 * screen_size[1] // 6, screen_size[0] // 5, screen_size[1] // 5)) 
+        ellipse(screen, GREY, (4 * screen_size[0] // 6, 4 * screen_size[1] // 6, screen_size[0] // 5, screen_size[1] // 5), 3)
+        Modules.game_mechanics.insert_text('Фильм ужасов', 'Fonts/Kozhevnikov.ttf', BLACK,
+                                                   (screen_size[0] // 12 + screen_size[0] // 6, 5 * screen_size[1] // 7 + screen_size[1] // 10),
+                                                   min(screen_size[1] // 12, screen_size[0] // 12))
+        Modules.game_mechanics.insert_text('Лабка', 'Fonts/Kozhevnikov.ttf', BLACK,
+                                                   (4 * screen_size[0] // 6 + screen_size[0] // 10, 4 * screen_size[1] // 6 + screen_size[1] // 10),
+                                                   min(screen_size[1] // 12, screen_size[0] // 12))
 
 if __name__ == "__main__":
     print("This module is not for direct call!")

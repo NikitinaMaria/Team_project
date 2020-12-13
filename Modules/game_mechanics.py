@@ -84,7 +84,7 @@ class Editor:
         self.boost_color.set_alpha(100)
         self.stream = Stream()
         self.analit = Analit()
-        self.time_for_Kozhevnikov_test = 500
+        self.time_for_Kozhevnikov_test = 600
 
     def user_events(self, events):
         '''
@@ -244,7 +244,7 @@ class Editor:
         if self.analit.pressed_or_not_button(events) and self.event_is_on == False:
             self.event_is_on = True
             self.Event = self.analit
-        if self.time % 700 == 0 and self.time != self.time_for_Kozhevnikov_test:
+        if self.time % 900 == 0 and self.time != self.time_for_Kozhevnikov_test:
             self.event_is_on = True
             FPS = 20
             self.Event = Ivanov_test()
@@ -257,6 +257,9 @@ class Editor:
         if self.time == self.time_for_Kozhevnikov_test:
             self.event_is_on = True
             self.Event = Kozhevnikov_test()
+        if self.time == 400:
+            self.event_is_on = True
+            self.Event = Evening()
 
 
 if __name__ == "__main__":
