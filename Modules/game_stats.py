@@ -29,6 +29,11 @@ screen.fill(WHITE)
 def draw_text(text, x, y, color, size):
     """
     The function adds a field with text
+    :param text: What you need to write
+    :param x: Coordinate x of the text center
+    :param y: Coordinate y of the text center
+    :param color: Text color
+    :param size: Text size
     """
     font = pygame.font.Font('freesansbold.ttf', size)
     text = font.render(text, True, color)

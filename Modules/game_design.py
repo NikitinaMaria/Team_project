@@ -1,7 +1,6 @@
 import pygame as pg
 from pygame.draw import *
 from random import randint
-import numpy as np
 
 # Colors
 RED = (255, 0, 0)
@@ -44,7 +43,7 @@ class Stars():
         self.top_distance_from_center_x = abs(self.coord_x - screen_size_x // 2)
 
     def motion(self):
-        self.coord_y += self.speed
+        self.coord_y += self.speed * (screen_size_y - self.coord_y // 3) // screen_size_y
         if self.coord_y >= screen_size_y + self.width:
             self.is_alive = False
         if self.side == 1:

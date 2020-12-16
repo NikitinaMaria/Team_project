@@ -1,6 +1,4 @@
-from random import randrange as rnd, choice
 from random import randint
-import numpy as np
 import pygame
 from pygame.draw import *
 from Modules.game_hero import *
@@ -55,8 +53,10 @@ def insert_text(string, font, color, position, size):
 
 def quit_condition(pressed_button):
     """
-	Checks if [X] button was pressed
-	"""
+    Checks if [X] button was pressed
+    :param pressed_button: User action
+    :return: Finish the game or not
+    """
     final = 0
     if pressed_button == pygame.QUIT:
         final = 1
