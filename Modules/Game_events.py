@@ -2,8 +2,10 @@ from random import randint
 import numpy as np
 import pygame
 import Modules.game_mechanics
+import Modules.game_menu
 from pygame.draw import *
 from Modules.game_mechanics import *
+from Modules.game_menu import *
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -770,7 +772,7 @@ class Kozhevnikov_test():
 
     def draw_logo(self):
         '''
-        Draws logo of the game 
+        Draws logo of the game
         '''
         Modules.game_mechanics.insert_picture('images/quiz.jpg', (screen_size[0] // 2, screen_size[1] // 2),
                                               screen_size)
@@ -889,6 +891,8 @@ class Endings:
         screen.blit(self.scale, (screen_size_x // 2 - screen_size_x // 10, screen_size_y // 2))
         pygame.display.update()
         self.quit_or_not()
+        self.score = ': уснул :)'
+        self.rank = 2
 
     def end_3(self):
         # The player has run out of mood scale
@@ -909,6 +913,8 @@ class Endings:
         screen.blit(self.scale, (screen_size_x // 2 - screen_size_x // 10, screen_size_y // 2))
         pygame.display.update()
         self.quit_or_not()
+        self.score = ': взгрустнул :('
+        self.rank = 1
 
     def end_5(self):
         # Bad end
@@ -921,6 +927,8 @@ class Endings:
         draw_text('И помните: это только начало...', screen_size_x // 2, screen_size_y - 30, DARK_RED, 39)
         pygame.display.update()
         self.quit_or_not()
+        self.score = ': академщик :O'
+        self.rank = 0
 
     def end_6(self):
         # Normal end
@@ -935,6 +943,8 @@ class Endings:
                   screen_size_y // 2 - 60, BLACK, 24)
         pygame.display.update()
         self.quit_or_not()
+        self.score = ': удос ' + str(self.final_points) + ' =]'
+        self.rank = 3
 
     def end_7(self):
         # Good end
@@ -949,6 +959,8 @@ class Endings:
                   screen_size_y // 2 - 60, BLACK, 24)
         pygame.display.update()
         self.quit_or_not()
+        self.score = ': хорош ' + str(self.final_points) + ' =>'
+        self.rank = 4
 
     def end_8(self):
         # Happy end
@@ -965,6 +977,8 @@ class Endings:
                   screen_size_y // 2 - 60, BLACK, 24)
         pygame.display.update()
         self.quit_or_not()
+        self.score = ': отл (nice) ' + str(self.final_points) + ' =3'
+        self.rank = 5
 
     def end_9(self):
         # Best end
@@ -983,6 +997,8 @@ class Endings:
                   screen_size_y // 2 - 60, BLACK, 24)
         pygame.display.update()
         self.quit_or_not()
+        self.score = ': отл (wow) ' + str(self.final_points) + ' =D'
+        self.rank = 6
 
     def end_4(self):
         # Time's up
@@ -1003,6 +1019,8 @@ class Endings:
             screen.blit(self.scale, (2 * screen_size_x // 3, screen_size_y // 2))
             draw_text('Академ', 5 * screen_size_x // 6, 2 * screen_size_y // 3 - 20, BLUE, 30)
             pygame.display.update()
+            self.score = ': академщик :O'
+            self.rank = 0
 
             # Checking user selection
             while self.number != 1:
@@ -1078,9 +1096,9 @@ class Evening():
             Modules.game_mechanics.insert_picture('images/Lab.jpg', (screen_size[0] // 2, 3 * screen_size[1] // 4), (screen_size[0] // 2, screen_size[1] // 2))
             self.print_text(self.text_choice0, screen_size[0] // 2)
         if self.choice == 1:
-            Modules.game_mechanics.insert_picture('images/Horror.jpg', (screen_size[1] // 3, screen_size[1] // 2), 
+            Modules.game_mechanics.insert_picture('images/Horror.jpg', (screen_size[1] // 3, screen_size[1] // 2),
                                                  (2 * screen_size[1] // 3, screen_size[1]))
-            self.print_text(self.text_choice1, 11 * screen_size[0] // 16) 
+            self.print_text(self.text_choice1, 11 * screen_size[0] // 16)
 
     def read_file(self, name):
         '''
@@ -1153,9 +1171,9 @@ class Evening():
         Draws page with Laptop to chose button
         '''
         Modules.game_mechanics.insert_picture('images/Laptop.jpg', (screen_size[0] // 2, screen_size[1] // 2), screen_size)
-        ellipse(screen, WHITE, (screen_size[0] // 12, 5 * screen_size[1] // 7, screen_size[0] // 3, screen_size[1] // 5)) 
+        ellipse(screen, WHITE, (screen_size[0] // 12, 5 * screen_size[1] // 7, screen_size[0] // 3, screen_size[1] // 5))
         ellipse(screen, BLACK, (screen_size[0] // 12, 5 * screen_size[1] // 7, screen_size[0] // 3, screen_size[1] // 5), 7)
-        ellipse(screen, WHITE, (4 * screen_size[0] // 6, 4 * screen_size[1] // 6, screen_size[0] // 5, screen_size[1] // 5)) 
+        ellipse(screen, WHITE, (4 * screen_size[0] // 6, 4 * screen_size[1] // 6, screen_size[0] // 5, screen_size[1] // 5))
         ellipse(screen, GREY, (4 * screen_size[0] // 6, 4 * screen_size[1] // 6, screen_size[0] // 5, screen_size[1] // 5), 7)
         Modules.game_mechanics.insert_text('Фильм ужасов', 'Fonts/Kozhevnikov.ttf', BLACK,
                                                    (screen_size[0] // 12 + screen_size[0] // 6, 5 * screen_size[1] // 7 + screen_size[1] // 10),
