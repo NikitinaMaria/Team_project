@@ -1128,7 +1128,7 @@ class Evening():
         for event in events:
             self.done = Modules.game_mechanics.quit_condition(event.type)
             if event.type == pygame.MOUSEBUTTONUP:
-                if event.button == 1 or event.button == 3:
+                if (event.button == 1 or event.button == 3) and self.time < self.time_limit - self.reading_time:
                     self.coord = pygame.mouse.get_pos()
                     if self.in_ellipse((screen_size[0] // 12, 5 * screen_size[1] // 7, screen_size[0] // 3, screen_size[1] // 5)):
                         self.choice = 0
@@ -1140,8 +1140,8 @@ class Evening():
         '''
         Checks if the click was in ellipse with given parameters
         '''
-        x = parameters[0] + parameters[2] // 2 - self.coord[0]
-        y = parameters[3] // 2 + parameters [1] - self.coord[1]
+        x = abs(parameters[0] + parameters[2] // 2 - self.coord[0])
+        y = abs(parameters[3] // 2 + parameters [1] - self.coord[1])
         if (x * 2 // parameters[2]) ** 2 + (y * 2 // parameters[3]) ** 2 <= 1:
             self.time = self.time_limit - self.reading_time + 5
             return True
